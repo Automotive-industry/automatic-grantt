@@ -34,9 +34,15 @@ interface GanttChartProps {
   projects: GanttProject[]
   pxPerDay: number
   sessions: WorklogSession[]
+  onSelect: (task: GanttTask, project: GanttProject) => void
 }
 
-export function GanttChart({ projects, pxPerDay, sessions }: GanttChartProps) {
+export function GanttChart({
+  projects,
+  pxPerDay,
+  sessions,
+  onSelect,
+}: GanttChartProps) {
   const rows = useMemo(() => flattenRows(projects), [projects])
   const timeline = useMemo(
     () => buildTimeline(projects, pxPerDay),
@@ -88,11 +94,11 @@ export function GanttChart({ projects, pxPerDay, sessions }: GanttChartProps) {
       >
         {/* ===== Header ===== */}
         <div
-          className="sticky top-0 z-30 flex border-b bg-card"
+          className="sticky top-0 z-40 flex border-b bg-card"
           style={{ height: HEADER_H }}
         >
           <div
-            className="sticky left-0 z-10 flex items-center border-r bg-card px-4 text-xs font-medium uppercase tracking-wide text-muted-foreground"
+            className="sticky left-0 z-50 flex items-center border-r bg-card px-4 text-xs font-medium uppercase tracking-wide text-muted-foreground"
             style={{ width: SIDEBAR_W }}
           >
             Tarea
@@ -168,6 +174,7 @@ export function GanttChart({ projects, pxPerDay, sessions }: GanttChartProps) {
                 timelineStart={timeline.start}
                 pxPerDay={pxPerDay}
                 sessions={sessions}
+                onSelect={onSelect}
               />
             )
           )}
@@ -240,7 +247,7 @@ function ProjectRow({ row }: { row: Extract<Row, { type: "project" }> }) {
       style={{ height: PROJECT_H }}
     >
       <div
-        className="sticky left-0 z-10 flex items-center gap-2 border-r bg-muted/60 px-4 backdrop-blur"
+        className="sticky left-0 z-30 flex items-center gap-2 border-r bg-muted px-4"
         style={{ width: SIDEBAR_W }}
       >
         <span className={cn("size-2 rounded-full", colors.dot)} />
@@ -262,12 +269,14 @@ function TaskRow({
   timelineStart,
   pxPerDay,
   sessions,
+  onSelect,
 }: {
   row: Extract<Row, { type: "task" }>
   index: number
   timelineStart: Date
   pxPerDay: number
   sessions: WorklogSession[]
+  onSelect: (task: GanttTask, project: GanttProject) => void
 }) {
   const { task, project } = row
   const colors = PROJECT_COLORS[project.color]
@@ -302,8 +311,9 @@ function TaskRow({
     >
       {/* sidebar cell */}
       <div
-        className="sticky left-0 z-10 flex flex-col justify-center gap-0.5 border-r bg-card px-4"
+        className="sticky left-0 z-30 flex cursor-pointer flex-col justify-center gap-0.5 border-r bg-card px-4"
         style={{ width: SIDEBAR_W }}
+        onClick={() => onSelect(task, project)}
       >
         <div className="flex items-center gap-1.5">
           <span className="truncate text-xs font-medium">{task.name}</span>
@@ -333,7 +343,10 @@ function TaskRow({
       </div>
 
       {/* timeline cell */}
-      <div className="relative flex-1">
+      <div
+        className="relative flex-1 cursor-pointer"
+        onClick={() => onSelect(task, project)}
+      >
         {task.milestone ? (
           <Tooltip>
             <TooltipTrigger asChild>

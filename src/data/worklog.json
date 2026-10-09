@@ -1,3 +1,16 @@
 {
-  "sessions": []
+  "sessions": [
+    {
+      "taskId": "wv-monitor",
+      "start": "2026-10-09T22:07:56.833Z",
+      "end": "2026-10-09T22:20:54.742Z",
+      "hours": 0.22
+    },
+    {
+      "taskId": "wv-monitor",
+      "start": "2026-10-09T22:34:40.377Z",
+      "end": "2026-10-09T22:34:41.090Z",
+      "hours": 0
+    }
+  ]
 }

@@ -6,6 +6,7 @@
 //   status <taskId> <done|in_progress|pending|blocked>
 //   progress <taskId> <0-100>
 //   note <taskId> "texto"
+//   log <taskId> "texto"                   Entrada en el historial de la tarea
 //   blocker <taskId> "motivo"              Pone status=blocked + blocker
 //   unblock <taskId>
 //   dates <taskId> <YYYY-MM-DD> <YYYY-MM-DD>
@@ -153,6 +154,14 @@ switch (command) {
     if (!rest[1]) fail("Falta el texto de la nota")
     task.notes = rest[1]
     message = `${task.id} nota actualizada`
+    break
+  }
+  case "log": {
+    const { task } = requireTask(rest[0])
+    if (!rest[1]) fail("Falta el texto del historial")
+    task.updates = task.updates ?? []
+    task.updates.push({ date: today(), text: rest[1] })
+    message = `${task.id} + historial: "${rest[1].slice(0, 40)}…"`
     break
   }
   case "blocker": {

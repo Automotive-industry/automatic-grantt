@@ -17,21 +17,37 @@
           "start": "2026-08-17",
           "end": "2026-09-18",
           "hours": 40,
-          "notes": "Flujo validado en Argentina. App local + piloto Selenium (43/43 tests)."
+          "notes": "Flujo validado en Argentina. App local + piloto Selenium (43/43 tests).",
+          "updates": [
+            {
+              "date": "2026-10-09",
+              "text": "Flujo Argentina validado: 10 leads en 3min50s (~23s/lead)"
+            },
+            {
+              "date": "2026-10-09",
+              "text": "Piloto Selenium OK: lectura Salesforce, 43/43 tests"
+            }
+          ]
         },
         {
           "id": "wv-monitor",
           "name": "Monitor de Bandeja (toma de leads automática)",
           "status": "in_progress",
-          "progress": 80,
+          "progress": 93,
           "start": "2026-09-21",
           "end": "2026-10-16",
-          "hours": 16,
+          "hours": 16.22,
           "estHours": 20,
           "deps": [
             "wv-doc-ar"
           ],
-          "notes": "Implementado (SSE + guardian). Pendiente: piloto real en Salesforce."
+          "notes": "Implementado (SSE + guardian). Pendiente: piloto real en Salesforce.",
+          "updates": [
+            {
+              "date": "2026-10-09",
+              "text": "Implementado ciclo lead_monitor + SSE + guardian; falta piloto real en Salesforce"
+            }
+          ]
         },
         {
           "id": "wv-test-col",
@@ -159,6 +175,12 @@
           "release": true,
           "deps": [
             "mx-ar"
+          ],
+          "updates": [
+            {
+              "date": "2026-10-09",
+              "text": "Recibida BD 2026 para entrenamiento MX"
+            }
           ]
         },
         {

@@ -10,6 +10,7 @@ import {
 } from "lucide-react"
 
 import { GanttChart } from "@/components/GanttChart"
+import { TaskDetailSheet } from "@/components/TaskDetailSheet"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import {
@@ -52,6 +53,10 @@ function App() {
   const [statusFilter, setStatusFilter] = useState<TaskStatus | "all">("all")
   const [zoom, setZoom] = useState(1)
   const [dark, setDark] = useState(true)
+  const [selected, setSelected] = useState<{
+    task: GanttTask
+    project: (typeof ganttData.projects)[number]
+  } | null>(null)
 
   const toggleDark = () => {
     document.documentElement.classList.toggle("dark")
@@ -229,6 +234,7 @@ function App() {
               projects={projects}
               pxPerDay={ZOOMS[zoom].pxPerDay}
               sessions={sessions}
+              onSelect={(task, project) => setSelected({ task, project })}
             />
           ) : (
             <Card>
@@ -237,6 +243,15 @@ function App() {
               </CardContent>
             </Card>
           )}
+
+          {/* detalle de tarea */}
+          <TaskDetailSheet
+            task={selected?.task ?? null}
+            project={selected?.project ?? null}
+            sessions={sessions}
+            allTasks={allTasks}
+            onClose={() => setSelected(null)}
+          />
 
           {/* legend */}
           <div className="flex flex-wrap items-center gap-4 text-xs text-muted-foreground">

@@ -24,6 +24,7 @@ export interface GanttTask {
   notes?: string
   hours?: number
   estHours?: number
+  updates?: { date: string; text: string }[]
 }
 
 export interface WorklogSession {

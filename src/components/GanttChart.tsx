@@ -130,6 +130,15 @@ export function GanttChart({
                 {7 * pxPerDay > 45 ? w.label : ""}
               </div>
             ))}
+            {/* marcador "hoy" en el encabezado */}
+            {showToday && (
+              <span
+                className="absolute bottom-6 z-10 -translate-x-1/2 rounded bg-primary px-1.5 py-0.5 text-[9px] font-bold uppercase text-primary-foreground"
+                style={{ left: todayX }}
+              >
+                hoy
+              </span>
+            )}
           </div>
         </div>
 
@@ -156,13 +165,9 @@ export function GanttChart({
             ))}
             {showToday && (
               <div
-                className="absolute inset-y-0 z-10 w-px bg-primary"
+                className="absolute inset-y-0 z-10 w-px bg-primary/70"
                 style={{ left: todayX }}
-              >
-                <span className="absolute -left-5 top-1 rounded bg-primary px-1.5 py-0.5 text-[9px] font-bold uppercase text-primary-foreground">
-                  hoy
-                </span>
-              </div>
+              />
             )}
             {/* stoppers — marcadores con letrero */}
             {markers.map((m) => {
@@ -309,7 +314,7 @@ function ProjectRow({
           <button
             key={t.id}
             onClick={() => onSelect(t, project)}
-            className="absolute top-1/2 z-10 flex -translate-x-1/2 -translate-y-1/2 items-center gap-1 rounded-full border border-primary/50 bg-primary/15 px-1.5 py-px text-[9px] font-semibold text-primary backdrop-blur transition-colors hover:bg-primary/30"
+            className="absolute top-1/2 z-30 flex -translate-x-1/2 -translate-y-1/2 items-center gap-1 rounded-full border border-primary/60 bg-primary/25 px-1.5 py-px text-[9px] font-semibold text-primary backdrop-blur transition-colors hover:bg-primary/40"
             style={{ left: dayToX(t.end, timelineStart, pxPerDay) }}
           >
             <Rocket className="size-2.5" />

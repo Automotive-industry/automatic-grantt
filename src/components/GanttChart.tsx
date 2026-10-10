@@ -193,7 +193,13 @@ export function GanttChart({
 
           {rows.map((row, i) =>
             row.type === "project" ? (
-              <ProjectRow key={`p-${row.project.id}`} row={row} />
+              <ProjectRow
+                key={`p-${row.project.id}`}
+                row={row}
+                timelineStart={timeline.start}
+                pxPerDay={pxPerDay}
+                onSelect={onSelect}
+              />
             ) : (
               <TaskRow
                 key={row.task.id}
@@ -262,13 +268,24 @@ export function GanttChart({
   )
 }
 
-function ProjectRow({ row }: { row: Extract<Row, { type: "project" }> }) {
+function ProjectRow({
+  row,
+  timelineStart,
+  pxPerDay,
+  onSelect,
+}: {
+  row: Extract<Row, { type: "project" }>
+  timelineStart: Date
+  pxPerDay: number
+  onSelect: (task: GanttTask, project: GanttProject) => void
+}) {
   const { project } = row
   const colors = PROJECT_COLORS[project.color]
   const avg = Math.round(
     project.tasks.reduce((acc, t) => acc + t.progress, 0) /
       project.tasks.length
   )
+  const releases = project.tasks.filter((t) => t.release)
   return (
     <div
       className="flex border-b bg-muted/40"
@@ -286,7 +303,20 @@ function ProjectRow({ row }: { row: Extract<Row, { type: "project" }> }) {
           {avg}%
         </span>
       </div>
-      <div className="flex-1" />
+      {/* tags de versión sobre la línea de tiempo del proyecto */}
+      <div className="relative flex-1">
+        {releases.map((t) => (
+          <button
+            key={t.id}
+            onClick={() => onSelect(t, project)}
+            className="absolute top-1/2 z-10 flex -translate-x-1/2 -translate-y-1/2 items-center gap-1 rounded-full border border-primary/50 bg-primary/15 px-1.5 py-px text-[9px] font-semibold text-primary backdrop-blur transition-colors hover:bg-primary/30"
+            style={{ left: dayToX(t.end, timelineStart, pxPerDay) }}
+          >
+            <Rocket className="size-2.5" />
+            <span className="max-w-28 truncate">{t.name}</span>
+          </button>
+        ))}
+      </div>
     </div>
   )
 }
@@ -529,6 +559,26 @@ function TooltipBody({
         </div>
       )}
       {task.notes && <div className="text-muted-foreground">{task.notes}</div>}
+      {task.updates && task.updates.length > 0 && (
+        <div className="space-y-0.5 border-t border-border/50 pt-1">
+          <div className="text-[10px] font-medium uppercase tracking-wide text-muted-foreground">
+            Avances
+          </div>
+          {task.updates.slice(-3).map((u, i) => (
+            <div key={i} className="text-muted-foreground">
+              <span className="text-foreground/60">
+                {format(parseISO(u.date), "d MMM", { locale: es })}:
+              </span>{" "}
+              {u.text}
+            </div>
+          ))}
+          {task.updates.length > 3 && (
+            <div className="text-[10px] text-muted-foreground">
+              +{task.updates.length - 3} más — clic para ver todo
+            </div>
+          )}
+        </div>
+      )}
     </div>
   )
 }

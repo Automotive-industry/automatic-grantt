@@ -146,6 +146,30 @@
           "deps": [
             "wv-api"
           ]
+        },
+        {
+          "id": "wo-rel-v1-0-piloto-ar",
+          "name": "v1.0 — Piloto AR",
+          "status": "done",
+          "progress": 100,
+          "start": "2026-10-10",
+          "end": "2026-10-10",
+          "milestone": true,
+          "release": true,
+          "updates": [
+            {
+              "date": "2026-10-09",
+              "text": "Documentación automática AR + cierre de leads: Flujo Argentina validado: 10 leads en 3min50s (~23s/lead)"
+            },
+            {
+              "date": "2026-10-09",
+              "text": "Documentación automática AR + cierre de leads: Piloto Selenium OK: lectura Salesforce, 43/43 tests"
+            },
+            {
+              "date": "2026-10-09",
+              "text": "Monitor de Bandeja (toma de leads automática): Implementado ciclo lead_monitor + SSE + guardian; falta piloto real en Salesforce"
+            }
+          ]
         }
       ]
     },

@@ -139,6 +139,25 @@ export function GanttChart({
                 hoy
               </span>
             )}
+            {/* carteles de stoppers/markers */}
+            {markers.map((m) => {
+              const mx = dayToX(m.date, timeline.start, pxPerDay)
+              if (mx < 0 || mx > timelineW) return null
+              return (
+                <Tooltip key={m.id}>
+                  <TooltipTrigger asChild>
+                    <span className="absolute top-[26px] z-10 flex -translate-x-1/2 cursor-default items-center gap-1 whitespace-nowrap rounded border border-red-500/50 bg-card px-1.5 py-px text-[9px] font-semibold text-red-400">
+                      <Ban className="size-2.5" />
+                      {m.label}
+                    </span>
+                  </TooltipTrigger>
+                  <TooltipContent side="bottom">
+                    {m.label} —{" "}
+                    {format(parseISO(m.date), "d MMM yyyy", { locale: es })}
+                  </TooltipContent>
+                </Tooltip>
+              )
+            })}
           </div>
         </div>
 
@@ -169,29 +188,16 @@ export function GanttChart({
                 style={{ left: todayX }}
               />
             )}
-            {/* stoppers — marcadores con letrero */}
+            {/* stoppers — solo la línea; el letrero va en el header */}
             {markers.map((m) => {
               const mx = dayToX(m.date, timeline.start, pxPerDay)
               if (mx < 0 || mx > timelineW) return null
               return (
                 <div
                   key={m.id}
-                  className="absolute inset-y-0 z-[15] border-l-2 border-dashed border-red-500/70"
+                  className="absolute inset-y-0 z-[15] border-l-2 border-dashed border-red-500/60"
                   style={{ left: mx }}
-                >
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <div className="pointer-events-auto absolute left-0 top-1 flex -translate-x-1/2 cursor-default items-center gap-1 whitespace-nowrap rounded-full bg-red-500 px-2 py-0.5 text-[10px] font-bold text-white shadow-md">
-                        <Ban className="size-3" />
-                        {m.label}
-                      </div>
-                    </TooltipTrigger>
-                    <TooltipContent side="bottom">
-                      {m.label} —{" "}
-                      {format(parseISO(m.date), "d MMM yyyy", { locale: es })}
-                    </TooltipContent>
-                  </Tooltip>
-                </div>
+                />
               )
             })}
           </div>

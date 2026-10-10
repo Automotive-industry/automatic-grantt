@@ -36,7 +36,7 @@
           "progress": 95,
           "start": "2026-09-21",
           "end": "2026-10-16",
-          "hours": 16.22,
+          "hours": 16.25,
           "estHours": 20,
           "deps": [
             "wv-doc-ar"
@@ -180,6 +180,107 @@
           "end": "2026-10-09",
           "estHours": 1,
           "hours": 0.12
+        },
+        {
+          "id": "wo-disenar-integracion-sele",
+          "name": "Diseñar integración selectiva ECC",
+          "status": "done",
+          "progress": 100,
+          "start": "2026-10-10",
+          "end": "2026-10-10",
+          "estHours": 1,
+          "hours": 0.11
+        },
+        {
+          "id": "wo-rel-v1-0-0-documentador-pred",
+          "name": "v1.0.0 — Documentador predictivo (primera versión)",
+          "status": "done",
+          "progress": 100,
+          "start": "2026-10-01",
+          "end": "2026-10-01",
+          "milestone": true,
+          "release": true,
+          "updates": []
+        },
+        {
+          "id": "wo-rel-v1-0-10-estabilizacion-1",
+          "name": "v1.0.10 — Estabilización 1.0.x (falsos errores por lentitud SF)",
+          "status": "done",
+          "progress": 100,
+          "start": "2026-10-03",
+          "end": "2026-10-03",
+          "milestone": true,
+          "release": true,
+          "updates": []
+        },
+        {
+          "id": "wo-rel-v1-1-0-cierre-de-leads-p",
+          "name": "v1.1.0 — Cierre de Leads por lote",
+          "status": "done",
+          "progress": 100,
+          "start": "2026-10-03",
+          "end": "2026-10-03",
+          "milestone": true,
+          "release": true,
+          "updates": []
+        },
+        {
+          "id": "wo-rel-v1-2-0-selector-pais-cam",
+          "name": "v1.2.0 — Selector país/campos + detección TEL1",
+          "status": "done",
+          "progress": 100,
+          "start": "2026-10-06",
+          "end": "2026-10-06",
+          "milestone": true,
+          "release": true,
+          "updates": []
+        },
+        {
+          "id": "wo-rel-v1-2-1-identidad-de-inte",
+          "name": "v1.2.1 — Identidad de intentos por país + fixes MX",
+          "status": "done",
+          "progress": 100,
+          "start": "2026-10-07",
+          "end": "2026-10-07",
+          "milestone": true,
+          "release": true,
+          "updates": []
+        },
+        {
+          "id": "wo-rel-v1-3-0-monitor-de-bandej",
+          "name": "v1.3.0 — Monitor de Bandeja (Pick Up automático)",
+          "status": "done",
+          "progress": 100,
+          "start": "2026-10-09",
+          "end": "2026-10-09",
+          "milestone": true,
+          "release": true,
+          "updates": [
+            {
+              "date": "2026-10-09",
+              "text": "Documentación automática AR + cierre de leads: Flujo Argentina validado: 10 leads en 3min50s (~23s/lead)"
+            },
+            {
+              "date": "2026-10-09",
+              "text": "Documentación automática AR + cierre de leads: Piloto Selenium OK: lectura Salesforce, 43/43 tests"
+            },
+            {
+              "date": "2026-10-09",
+              "text": "Monitor de Bandeja (toma de leads automática): Implementado ciclo lead_monitor + SSE + guardian; falta piloto real en Salesforce"
+            },
+            {
+              "date": "2026-10-09",
+              "text": "v1.0 — Piloto AR: Documentación automática AR + cierre de leads: Flujo Argentina validado: 10 leads en 3min50s (~23s/lead)"
+            },
+            {
+              "date": "2026-10-09",
+              "text": "v1.0 — Piloto AR: Documentación automática AR + cierre de leads: Piloto Selenium OK: lectura Salesforce, 43/43 tests"
+            },
+            {
+              "date": "2026-10-09",
+              "text": "v1.0 — Piloto AR: Monitor de Bandeja (toma de leads automática): Implementado ciclo lead_monitor + SSE + guardian; falta piloto real en Salesforce"
+            }
+          ]
         }
       ]
     },

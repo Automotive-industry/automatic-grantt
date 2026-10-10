@@ -182,7 +182,7 @@ export function GanttChart({
                 >
                   <Tooltip>
                     <TooltipTrigger asChild>
-                      <span className="pointer-events-auto absolute bottom-2 left-0 flex -translate-x-1/2 cursor-default items-center gap-1 whitespace-nowrap rounded border border-red-500/50 bg-card px-1.5 py-px text-[9px] font-semibold text-red-400 shadow-sm">
+                      <span className="pointer-events-auto absolute bottom-2 left-0 flex -translate-x-1/2 cursor-default items-center gap-1 whitespace-nowrap rounded bg-zinc-700 px-1.5 py-px text-[9px] font-semibold text-red-300 shadow-md ring-1 ring-red-500/40">
                         <Ban className="size-2.5" />
                         {m.label}
                       </span>
@@ -291,7 +291,9 @@ function ProjectRow({
     project.tasks.reduce((acc, t) => acc + t.progress, 0) /
       project.tasks.length
   )
-  const releases = project.tasks.filter((t) => t.release)
+  const releases = project.tasks
+    .filter((t) => t.release)
+    .sort((a, b) => a.end.localeCompare(b.end))
   return (
     <div
       className="flex border-b bg-muted/40"
@@ -311,17 +313,29 @@ function ProjectRow({
       </div>
       {/* tags de versión sobre la línea de tiempo del proyecto */}
       <div className="relative flex-1">
-        {releases.map((t) => (
-          <button
-            key={t.id}
-            onClick={() => onSelect(t, project)}
-            className="absolute top-1/2 z-30 flex -translate-x-1/2 -translate-y-1/2 items-center gap-1 rounded-full border border-primary/60 bg-primary/25 px-1.5 py-px text-[9px] font-semibold text-primary backdrop-blur transition-colors hover:bg-primary/40"
-            style={{ left: dayToX(t.end, timelineStart, pxPerDay) }}
-          >
-            <Rocket className="size-2.5" />
-            <span className="max-w-28 truncate">{t.name}</span>
-          </button>
-        ))}
+        {releases.map((t, i) => {
+          const short = t.name.match(/^v[\w.\-]+/i)?.[0] ?? t.name
+          return (
+            <Tooltip key={t.id}>
+              <TooltipTrigger asChild>
+                <button
+                  onClick={() => onSelect(t, project)}
+                  className={cn(
+                    "absolute z-30 flex -translate-x-1/2 items-center gap-1 whitespace-nowrap rounded-full border border-primary/60 bg-primary/25 px-1.5 py-px text-[9px] font-semibold text-primary backdrop-blur transition-colors hover:bg-primary/40",
+                    i % 2 === 0 ? "top-[3px]" : "bottom-[3px]"
+                  )}
+                  style={{ left: dayToX(t.end, timelineStart, pxPerDay) }}
+                >
+                  <Rocket className="size-2.5" />
+                  {short}
+                </button>
+              </TooltipTrigger>
+              <TooltipContent side="top">
+                {t.name} — {format(parseISO(t.end), "d MMM yyyy", { locale: es })}
+              </TooltipContent>
+            </Tooltip>
+          )
+        })}
       </div>
     </div>
   )

@@ -21,8 +21,8 @@ const COMMANDS: [string, string][] = [
   ["blocker <id> \"motivo\" / unblock <id>", "marcar/liberar bloqueo"],
   ["estimate <id> <horas>", "estimar horas de una tarea"],
   ["add <proyecto> \"Nombre\" --start D --end D [--deps ids] [--est N]", "crear tarea"],
-  ["release <proyecto> \"vX.Y — nombre\"", "versión + changelog automático"],
-  ["marker \"texto\" --date D / unmarker <id>", "stopper con letrero"],
+  ["release <proyecto> \"vX.Y — nombre\" [--date D]", "versión → pill 🚀 en la banda + changelog auto"],
+  ["marker \"texto\" --date D / unmarker <id>", "stopper/corte externo → línea roja (NO versiones)"],
   ["help", "esta ayuda desde la terminal"],
 ]
 
@@ -31,7 +31,9 @@ Este proyecto está traqueado en el tablero Gantt del usuario
 (${TRACKER}). Al empezar/terminar trabajo traqueable, reportar con:
 node ${TRACKER}\\scripts\\update-tracker.mjs <cmd>
 Comandos: list | start <id> | stop <id> --progress N | status |
-blocker | release | log <id> "avance" | marker "texto" --date D`
+blocker | release | log <id> "avance" | marker "texto" --date D
+IMPORTANTE: release = versiones del proyecto (pill 🚀 en la banda);
+marker = solo stoppers/cortes externos (línea roja), nunca versiones.`
 
 export function AgentGuideDialog() {
   const [copied, setCopied] = useState(false)

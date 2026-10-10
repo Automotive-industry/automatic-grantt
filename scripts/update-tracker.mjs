@@ -15,7 +15,7 @@
 //   start <taskId>                         Abre sesión de trabajo (timer)
 //   stop <taskId> [--progress N]           Cierra sesión y suma horas automáticas
 //   add <projectId> "Nombre" --start D --end D [--deps a,b] [--est N] [--milestone]
-//   release <projectId> "vX.Y — nombre"    Hito de release hoy + changelog auto desde la release anterior
+//   release <projectId> "vX.Y — nombre" [--date D]  Hito de release + changelog auto desde la release anterior
 //   marker "texto" [--date YYYY-MM-DD]     Stopper: línea vertical con letrero
 //   unmarker <markerId>
 //   remove <taskId>                        Elimina una tarea
@@ -271,6 +271,8 @@ switch (command) {
     if (!name) fail(`Falta el nombre de la release, ej: "v1.2 — Piloto COL"`)
     const id = `${project.id.slice(0, 2)}-rel-${slug(name)}`
     if (findTask(id)) fail(`Ya existe ${id}`)
+    const date = flags.date || today()
+    if (!isDate(date)) fail("Fecha --date en YYYY-MM-DD")
 
     // Changelog automático: updates de las tareas desde la release anterior
     const prevRelease = [...project.tasks]
@@ -280,7 +282,8 @@ switch (command) {
     const updates = []
     for (const t of project.tasks) {
       for (const u of t.updates ?? []) {
-        if (u.date >= since) updates.push({ date: u.date, text: `${t.name}: ${u.text}` })
+        if (u.date >= since && u.date <= date)
+          updates.push({ date: u.date, text: `${t.name}: ${u.text}` })
       }
     }
     updates.sort((a, b) => a.date.localeCompare(b.date))
@@ -290,13 +293,13 @@ switch (command) {
       name,
       status: "done",
       progress: 100,
-      start: today(),
-      end: today(),
+      start: date,
+      end: date,
       milestone: true,
       release: true,
       updates,
     })
-    message = `Release ${name} en ${project.id} (${today()}) con ${updates.length} entradas de changelog`
+    message = `Release ${name} en ${project.id} (${date}) con ${updates.length} entradas de changelog`
     break
   }
   case "marker": {

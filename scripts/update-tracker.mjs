@@ -15,7 +15,9 @@
 //   start <taskId>                         Abre sesión de trabajo (timer)
 //   stop <taskId> [--progress N]           Cierra sesión y suma horas automáticas
 //   add <projectId> "Nombre" --start D --end D [--deps a,b] [--est N] [--milestone]
-//   release <projectId> "vX.Y — nombre"    Hito de release con fecha de hoy
+//   release <projectId> "vX.Y — nombre"    Hito de release hoy + changelog auto desde la release anterior
+//   marker "texto" [--date YYYY-MM-DD]     Stopper: línea vertical con letrero
+//   unmarker <markerId>
 //   remove <taskId>                        Elimina una tarea
 //   build                                  Rebuild + copia a shareDir (gantt.config.json)
 
@@ -266,6 +268,20 @@ switch (command) {
     if (!name) fail(`Falta el nombre de la release, ej: "v1.2 — Piloto COL"`)
     const id = `${project.id.slice(0, 2)}-rel-${slug(name)}`
     if (findTask(id)) fail(`Ya existe ${id}`)
+
+    // Changelog automático: updates de las tareas desde la release anterior
+    const prevRelease = [...project.tasks]
+      .reverse()
+      .find((t) => t.release)
+    const since = prevRelease ? prevRelease.end : "0000-01-01"
+    const updates = []
+    for (const t of project.tasks) {
+      for (const u of t.updates ?? []) {
+        if (u.date >= since) updates.push({ date: u.date, text: `${t.name}: ${u.text}` })
+      }
+    }
+    updates.sort((a, b) => a.date.localeCompare(b.date))
+
     project.tasks.push({
       id,
       name,
@@ -275,8 +291,29 @@ switch (command) {
       end: today(),
       milestone: true,
       release: true,
+      updates,
     })
-    message = `Release ${name} registrada en ${project.id} (${today()})`
+    message = `Release ${name} en ${project.id} (${today()}) con ${updates.length} entradas de changelog`
+    break
+  }
+  case "marker": {
+    const label = rest[0]
+    if (!label) fail(`Falta el texto del marker`)
+    const date = flags.date || today()
+    if (!isDate(date)) fail("Fecha --date en YYYY-MM-DD")
+    data.markers = data.markers ?? []
+    const id = `mk-${data.markers.length + 1}-${slug(label)}`
+    if (data.markers.find((m) => m.id === id)) fail(`Ya existe marker ${id}`)
+    data.markers.push({ id, date, label })
+    message = `Marker "${label}" en ${date}`
+    break
+  }
+  case "unmarker": {
+    if (!rest[0]) fail("Falta <markerId>")
+    const before = (data.markers ?? []).length
+    data.markers = (data.markers ?? []).filter((m) => m.id !== rest[0])
+    if (data.markers.length === before) fail(`Marker no encontrado: ${rest[0]}`)
+    message = `Marker ${rest[0]} eliminado`
     break
   }
   case "remove": {

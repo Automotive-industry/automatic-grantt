@@ -42,8 +42,15 @@ export interface GanttProject {
   tasks: GanttTask[]
 }
 
+export interface GanttMarker {
+  id: string
+  date: string
+  label: string
+}
+
 export interface GanttData {
   meta: { title: string; lastUpdated: string }
+  markers?: GanttMarker[]
   projects: GanttProject[]
 }
 

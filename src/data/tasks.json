@@ -1,7 +1,7 @@
 {
   "meta": {
     "title": "Tablero de proyectos — Data & Automatización",
-    "lastUpdated": "2026-10-09"
+    "lastUpdated": "2026-10-10"
   },
   "projects": [
     {
@@ -235,6 +235,13 @@
           ]
         }
       ]
+    }
+  ],
+  "markers": [
+    {
+      "id": "mk-1-corte-mensual-reporte-ge",
+      "date": "2026-10-31",
+      "label": "Corte mensual — reporte gerencia"
     }
   ]
 }

@@ -234,6 +234,7 @@ function App() {
               projects={projects}
               pxPerDay={ZOOMS[zoom].pxPerDay}
               sessions={sessions}
+              markers={ganttData.markers ?? []}
               onSelect={(task, project) => setSelected({ task, project })}
             />
           ) : (

@@ -1,7 +1,7 @@
 import { useMemo, type CSSProperties } from "react"
 import { differenceInCalendarDays, format, parseISO } from "date-fns"
 import { es } from "date-fns/locale"
-import { AlertTriangle, Rocket } from "lucide-react"
+import { AlertTriangle, Ban, Rocket } from "lucide-react"
 
 import { Badge } from "@/components/ui/badge"
 import {
@@ -17,6 +17,7 @@ import {
   projectTask,
   PROJECT_COLORS,
   STATUS_META,
+  type GanttMarker,
   type GanttProject,
   type GanttTask,
   type Projection,
@@ -34,6 +35,7 @@ interface GanttChartProps {
   projects: GanttProject[]
   pxPerDay: number
   sessions: WorklogSession[]
+  markers: GanttMarker[]
   onSelect: (task: GanttTask, project: GanttProject) => void
 }
 
@@ -41,6 +43,7 @@ export function GanttChart({
   projects,
   pxPerDay,
   sessions,
+  markers,
   onSelect,
 }: GanttChartProps) {
   const rows = useMemo(() => flattenRows(projects), [projects])
@@ -161,6 +164,31 @@ export function GanttChart({
                 </span>
               </div>
             )}
+            {/* stoppers — marcadores con letrero */}
+            {markers.map((m) => {
+              const mx = dayToX(m.date, timeline.start, pxPerDay)
+              if (mx < 0 || mx > timelineW) return null
+              return (
+                <div
+                  key={m.id}
+                  className="absolute inset-y-0 z-[15] border-l-2 border-dashed border-red-500/70"
+                  style={{ left: mx }}
+                >
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <div className="pointer-events-auto absolute left-0 top-1 flex -translate-x-1/2 cursor-default items-center gap-1 whitespace-nowrap rounded-full bg-red-500 px-2 py-0.5 text-[10px] font-bold text-white shadow-md">
+                        <Ban className="size-3" />
+                        {m.label}
+                      </div>
+                    </TooltipTrigger>
+                    <TooltipContent side="bottom">
+                      {m.label} —{" "}
+                      {format(parseISO(m.date), "d MMM yyyy", { locale: es })}
+                    </TooltipContent>
+                  </Tooltip>
+                </div>
+              )
+            })}
           </div>
 
           {rows.map((row, i) =>

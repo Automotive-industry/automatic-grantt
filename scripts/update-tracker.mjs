@@ -330,6 +330,16 @@ switch (command) {
     message = "Build manual"
     break
   }
+  case "help": {
+    mutated = false
+    const header = readFileSync(import.meta.filename, "utf8")
+    const usage = header.slice(
+      header.indexOf("// Uso:"),
+      header.indexOf("\n\nimport")
+    )
+    console.log(usage.replace(/^\/\/ ?/gm, ""))
+    break
+  }
   default:
     fail(
       `Comando desconocido: ${command ?? "(vacío)"}. Ver comandos en el encabezado del script.`
@@ -344,7 +354,7 @@ if (mutated) {
 }
 
 // Rebuild + copia a carpeta compartida (salvo --no-build)
-if (flags["no-build"] !== true && command !== "list") {
+if (flags["no-build"] !== true && command !== "list" && command !== "help") {
   try {
     console.log("→ Building…")
     execSync("npm run build", { cwd: ROOT, stdio: "inherit" })

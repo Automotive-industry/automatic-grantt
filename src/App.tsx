@@ -9,6 +9,7 @@ import {
   Timer,
 } from "lucide-react"
 
+import { AgentGuideDialog } from "@/components/AgentGuideDialog"
 import { GanttChart } from "@/components/GanttChart"
 import { TaskDetailSheet } from "@/components/TaskDetailSheet"
 import { Badge } from "@/components/ui/badge"
@@ -278,6 +279,7 @@ function App() {
               <AlertTriangle className="size-3 text-amber-500" />
               Bloqueante externo
             </span>
+            <AgentGuideDialog />
           </div>
         </div>
       </div>

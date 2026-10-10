@@ -233,7 +233,10 @@ switch (command) {
     task.hours = Math.round(((task.hours ?? 0) + open.hours) * 100) / 100
     if (flags.progress !== undefined && flags.progress !== true) {
       const n = Number(flags.progress)
-      if (Number.isFinite(n)) task.progress = Math.min(100, Math.max(0, Math.round(n)))
+      if (Number.isFinite(n)) {
+        task.progress = Math.min(100, Math.max(0, Math.round(n)))
+        if (task.progress === 100) task.status = "done"
+      }
     }
     message = `Sesión cerrada en ${task.id}: +${open.hours}h (total ${task.hours}h)`
     break

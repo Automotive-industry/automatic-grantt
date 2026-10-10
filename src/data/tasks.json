@@ -170,6 +170,16 @@
               "text": "Monitor de Bandeja (toma de leads automática): Implementado ciclo lead_monitor + SSE + guardian; falta piloto real en Salesforce"
             }
           ]
+        },
+        {
+          "id": "wo-evaluar-ecc-y-ruflo-para",
+          "name": "Evaluar ECC y Ruflo para harness experto",
+          "status": "done",
+          "progress": 100,
+          "start": "2026-10-09",
+          "end": "2026-10-09",
+          "estHours": 1,
+          "hours": 0.12
         }
       ]
     },

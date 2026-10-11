@@ -36,7 +36,7 @@
           "progress": 98,
           "start": "2026-09-21",
           "end": "2026-10-16",
-          "hours": 16.42,
+          "hours": 16.51,
           "estHours": 20,
           "deps": [
             "wv-doc-ar"
@@ -46,6 +46,10 @@
             {
               "date": "2026-10-09",
               "text": "Implementado ciclo lead_monitor + SSE + guardian; falta piloto real en Salesforce"
+            },
+            {
+              "date": "2026-10-11",
+              "text": "Diagnóstico estabilidad: servidor/guardian ausentes, Edge vivo; separar salud HTTP-CDP, worker persistente y arranque al logon"
             }
           ]
         },

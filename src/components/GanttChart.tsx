@@ -27,7 +27,7 @@ import {
 import { cn } from "@/lib/utils"
 
 const SIDEBAR_W = 340
-const PROJECT_H = 34
+const PROJECT_H = 50
 const TASK_H = 46
 const HEADER_H = 52
 
@@ -355,7 +355,7 @@ function ProjectRow({
           )}
         </div>
         {releases.length > 0 && (
-          <div className="flex items-center gap-1 overflow-x-auto">
+          <div className="flex items-center gap-1 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             {open ? (
               releases.map(versionPill)
             ) : (
@@ -384,7 +384,7 @@ function ProjectRow({
                   onClick={() => onSelect(t, project)}
                   className={cn(
                     "absolute z-30 flex -translate-x-1/2 items-center gap-1 whitespace-nowrap rounded-full border border-primary/60 bg-primary/25 px-1.5 py-px text-[9px] font-semibold text-primary backdrop-blur transition-colors hover:bg-primary/40",
-                    i % 2 === 0 ? "top-[3px]" : "bottom-[3px]"
+                    i % 2 === 0 ? "top-[6px]" : "bottom-[6px]"
                   )}
                   style={{ left: dayToX(t.end, timelineStart, pxPerDay) }}
                 >

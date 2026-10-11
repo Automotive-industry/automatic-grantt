@@ -1,7 +1,7 @@
-import { useMemo, useState, type CSSProperties } from "react"
+import { useMemo, type CSSProperties } from "react"
 import { differenceInCalendarDays, format, parseISO } from "date-fns"
 import { es } from "date-fns/locale"
-import { AlertTriangle, Ban, ChevronDown, Rocket } from "lucide-react"
+import { AlertTriangle, Ban, Rocket } from "lucide-react"
 
 import { Badge } from "@/components/ui/badge"
 import {
@@ -27,7 +27,7 @@ import {
 import { cn } from "@/lib/utils"
 
 const SIDEBAR_W = 340
-const PROJECT_H = 50
+const PROJECT_H = 34
 const TASK_H = 46
 const HEADER_H = 52
 
@@ -300,27 +300,8 @@ function ProjectRow({
   const releases = project.tasks
     .filter((t) => t.release)
     .sort((a, b) => a.end.localeCompare(b.end))
-  const [open, setOpen] = useState(true)
-  const last = releases[releases.length - 1]
   const shortName = (t: GanttTask) =>
     t.name.match(/^v[\w.\-]+/i)?.[0] ?? t.name
-
-  const versionPill = (t: GanttTask) => (
-    <Tooltip key={t.id}>
-      <TooltipTrigger asChild>
-        <button
-          onClick={() => onSelect(t, project)}
-          className="flex shrink-0 items-center gap-0.5 whitespace-nowrap rounded-full border border-primary/50 bg-primary/15 px-1.5 py-px text-[9px] font-semibold text-primary transition-colors hover:bg-primary/30"
-        >
-          <Rocket className="size-2.5" />
-          {shortName(t)}
-        </button>
-      </TooltipTrigger>
-      <TooltipContent side="bottom">
-        {t.name} — {format(parseISO(t.end), "d MMM yyyy", { locale: es })}
-      </TooltipContent>
-    </Tooltip>
-  )
 
   return (
     <div
@@ -328,51 +309,16 @@ function ProjectRow({
       style={{ height: PROJECT_H }}
     >
       <div
-        className="sticky left-0 z-30 flex flex-col justify-center gap-0.5 border-r bg-muted px-4"
+        className="sticky left-0 z-30 flex items-center gap-2 border-r bg-muted px-4"
         style={{ width: SIDEBAR_W }}
       >
-        <div className="flex items-center gap-2">
-          <span className={cn("size-2 rounded-full", colors.dot)} />
-          <span className={cn("truncate text-xs font-bold", colors.text)}>
-            {project.name}
-          </span>
-          <span className="ml-auto text-[10px] font-medium text-muted-foreground">
-            {avg}%
-          </span>
-          {releases.length > 0 && (
-            <button
-              onClick={() => setOpen(!open)}
-              title={open ? "Ocultar versiones" : "Ver versiones"}
-              className="rounded p-0.5 text-muted-foreground transition-colors hover:text-foreground"
-            >
-              <ChevronDown
-                className={cn(
-                  "size-3 transition-transform",
-                  open && "rotate-180"
-                )}
-              />
-            </button>
-          )}
-        </div>
-        {releases.length > 0 && (
-          <div className="flex items-center gap-1 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-            {open ? (
-              releases.map(versionPill)
-            ) : (
-              <>
-                {versionPill(last)}
-                {releases.length > 1 && (
-                  <button
-                    onClick={() => setOpen(true)}
-                    className="text-[9px] font-medium text-muted-foreground hover:text-foreground"
-                  >
-                    +{releases.length - 1} versiones
-                  </button>
-                )}
-              </>
-            )}
-          </div>
-        )}
+        <span className={cn("size-2 rounded-full", colors.dot)} />
+        <span className={cn("truncate text-xs font-bold", colors.text)}>
+          {project.name}
+        </span>
+        <span className="ml-auto text-[10px] font-medium text-muted-foreground">
+          {avg}%
+        </span>
       </div>
       {/* tags de versión sobre la línea de tiempo del proyecto */}
       <div className="relative flex-1">
@@ -384,7 +330,7 @@ function ProjectRow({
                   onClick={() => onSelect(t, project)}
                   className={cn(
                     "absolute z-30 flex -translate-x-1/2 items-center gap-1 whitespace-nowrap rounded-full border border-primary/60 bg-primary/25 px-1.5 py-px text-[9px] font-semibold text-primary backdrop-blur transition-colors hover:bg-primary/40",
-                    i % 2 === 0 ? "top-[6px]" : "bottom-[6px]"
+                    i % 2 === 0 ? "top-[3px]" : "bottom-[3px]"
                   )}
                   style={{ left: dayToX(t.end, timelineStart, pxPerDay) }}
                 >

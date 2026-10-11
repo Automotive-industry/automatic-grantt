@@ -56,31 +56,35 @@ export function GanttChart({
   // Y center of each task row (for dependency arrows)
   const rowY = useMemo(() => {
     const map = new Map<string, number>()
+    const bands = new Map<string, number>()
     let y = 0
     for (const row of rows) {
       if (row.type === "project") {
+        bands.set(row.project.id, y + PROJECT_H / 2)
         y += PROJECT_H
       } else {
         map.set(row.task.id, y + TASK_H / 2)
         y += TASK_H
       }
     }
-    return { map, total: y }
+    return { map, bands, total: y }
   }, [rows])
 
   const anchors = useMemo(() => {
     const map = new Map<string, { sx: number; ex: number; y: number }>()
-    for (const row of rows) {
-      if (row.type !== "task") continue
-      const y = rowY.map.get(row.task.id) ?? 0
-      const sx = dayToX(row.task.start, timeline.start, pxPerDay)
-      const ex = row.task.milestone
-        ? sx
-        : dayToX(row.task.end, timeline.start, pxPerDay) + pxPerDay
-      map.set(row.task.id, { sx, ex, y })
+    for (const p of projects) {
+      for (const task of p.tasks) {
+        // releases sin fila anclan las flechas al centro de la banda del proyecto
+        const y = rowY.map.get(task.id) ?? rowY.bands.get(p.id) ?? 0
+        const sx = dayToX(task.start, timeline.start, pxPerDay)
+        const ex = task.milestone
+          ? sx
+          : dayToX(task.end, timeline.start, pxPerDay) + pxPerDay
+        map.set(task.id, { sx, ex, y })
+      }
     }
     return map
-  }, [rows, rowY, timeline.start, pxPerDay])
+  }, [projects, rowY, timeline.start, pxPerDay])
 
   const todayX = dayToX(
     new Date().toISOString().slice(0, 10),
@@ -287,14 +291,16 @@ function ProjectRow({
 }) {
   const { project } = row
   const colors = PROJECT_COLORS[project.color]
-  const avg = Math.round(
-    project.tasks.reduce((acc, t) => acc + t.progress, 0) /
-      project.tasks.length
-  )
+  const workTasks = project.tasks.filter((t) => !t.release)
+  const avg = workTasks.length
+    ? Math.round(
+        workTasks.reduce((acc, t) => acc + t.progress, 0) / workTasks.length
+      )
+    : 0
   const releases = project.tasks
     .filter((t) => t.release)
     .sort((a, b) => a.end.localeCompare(b.end))
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(true)
   const last = releases[releases.length - 1]
   const shortName = (t: GanttTask) =>
     t.name.match(/^v[\w.\-]+/i)?.[0] ?? t.name

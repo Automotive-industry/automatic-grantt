@@ -120,9 +120,10 @@ export type Row =
 export function flattenRows(projects: GanttProject[]): Row[] {
   return projects.flatMap((project) => [
     { type: "project", project } as Row,
-    ...project.tasks.map(
-      (task): Row => ({ type: "task", task, project })
-    ),
+    // las releases no son filas: viven en la banda + tira del título
+    ...project.tasks
+      .filter((task) => !task.release)
+      .map((task): Row => ({ type: "task", task, project })),
   ])
 }
 

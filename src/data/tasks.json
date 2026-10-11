@@ -33,10 +33,10 @@
           "id": "wv-monitor",
           "name": "Monitor de Bandeja (toma de leads automática)",
           "status": "in_progress",
-          "progress": 95,
+          "progress": 98,
           "start": "2026-09-21",
           "end": "2026-10-16",
-          "hours": 16.25,
+          "hours": 16.42,
           "estHours": 20,
           "deps": [
             "wv-doc-ar"

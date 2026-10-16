@@ -165,15 +165,50 @@
         {
           "id": "wv-asignacion",
           "name": "Asignación automática de leads",
-          "status": "pending",
-          "progress": 0,
+          "status": "in_progress",
+          "progress": 60,
           "start": "2026-11-02",
           "end": "2026-11-13",
           "estHours": 16,
           "deps": [
             "wv-monitor",
             "wv-duplicados"
-          ]
+          ],
+          "updates": [
+            {
+              "date": "2026-10-16",
+              "text": "Equipo por turnos: seccion Equipo en la UI (nombre exacto de Salesforce + franjas hh:mm propias por persona), PUT /api/monitor/equipo, persistido en monitor_state.equipo. Sin selector de metodo: el metodo sale del lead."
+            },
+            {
+              "date": "2026-10-16",
+              "text": "Encargada activa: primera persona cuya franja cubre la hora actual (solapes gana la primera). Si coincide con el usuario de la sesion, flujo normal; si no hay equipo/franja, comportamiento previo intacto."
+            },
+            {
+              "date": "2026-10-16",
+              "text": "Reasignacion via modal 'Cambiar propietario' (shadow DOM): abre dialogo, espera el input del lookup con polling + settle, tipea el nombre, elige la opcion registro, confirma y RELEE el propietario para verificar. Outcome: reasignado | reasignacion_error:modal|busqueda|opcion|confirmar|verificacion. Si falla, el lead queda con el bot (nada se pierde)."
+            },
+            {
+              "date": "2026-10-16",
+              "text": "Reglas: leads reasignados JAMAS reciben WhatsApp automatico (saldria de la sesion del bot). Comentario de asignacion pendiente de definicion - por ahora no escribe nada en Otra informacion (sin_comentario)."
+            },
+            {
+              "date": "2026-10-16",
+              "text": "Fix carrera lookup: el input 'Buscar Usuarios' se monta despues del modal y tarda en escuchar (pegar enseguida no busca). Ahora polling del input + settle 3s + re-tipeo una vez si no hay opciones."
+            },
+            {
+              "date": "2026-10-16",
+              "text": "Fix selector de resultados: las opciones 'Buscar X'/'Mostrar todos los resultados' tambien contienen el nombre y abrian la vista expandida sin boton confirmar (error:confirmar). Ahora se filtran y, si la vista expandida abre, se clica la fila del registro."
+            },
+            {
+              "date": "2026-10-16",
+              "text": "Fix boton confirmar: lightning-button host + su button interno matcheaban ambos la etiqueta -> script devolvia 'ambiguous' sin clicar y el modal quedaba colgado. Ahora clickea el button real + polling del footer."
+            },
+            {
+              "date": "2026-10-16",
+              "text": "Fix verificacion PickUp: clic que guarda tarde dejaba 'no_verificado' sin marca ni WhatsApp aunque el owner ya era el usuario. Ahora refresh+relectura, 'no_verificado' reintenta 1 vez, y state.bot_owner distingue al usuario de sesion de otro humano. 451 tests + ruff OK, deployado en dist."
+            }
+          ],
+          "hours": 6.01
         },
         {
           "id": "wv-bandejas",

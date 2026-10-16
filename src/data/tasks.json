@@ -32,7 +32,7 @@
         {
           "id": "wv-monitor",
           "name": "Monitor de Bandeja (toma de leads automática)",
-          "status": "in_progress",
+          "status": "blocked",
           "progress": 98,
           "start": "2026-09-21",
           "end": "2026-10-16",
@@ -123,7 +123,8 @@
               "date": "2026-10-16",
               "text": "Fix confirm modal: lightning-button host + button interno matcheaban ambos -> 'ambiguous' sin click; ahora clickea el button real. Explicaba modal colgado + error:confirmar. 451 tests OK."
             }
-          ]
+          ],
+          "blocker": "Monitor de bandeja se detiene intermitente: pierde conexion con el navegador Edge/servidor (sospecha: suspension de pestanas de Edge en el navegador dedicado). Requiere reinicio manual del navegador del bot."
         },
         {
           "id": "wv-test-col",

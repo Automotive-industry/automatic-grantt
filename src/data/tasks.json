@@ -1,7 +1,7 @@
 {
   "meta": {
     "title": "Tablero de proyectos — Data & Automatización",
-    "lastUpdated": "2026-10-11"
+    "lastUpdated": "2026-10-16"
   },
   "projects": [
     {
@@ -36,12 +36,12 @@
           "progress": 98,
           "start": "2026-09-21",
           "end": "2026-10-16",
-          "hours": 16.51,
+          "hours": 16.74,
           "estHours": 20,
           "deps": [
             "wv-doc-ar"
           ],
-          "notes": "Implementado (SSE + guardian). Pendiente: piloto real en Salesforce.",
+          "notes": "Implementado y operativo. Pendiente: confirmar envío WhatsApp en vivo, cerrar detección residual del panel y completar versionado.",
           "updates": [
             {
               "date": "2026-10-09",
@@ -50,6 +50,78 @@
             {
               "date": "2026-10-11",
               "text": "Diagnóstico estabilidad: servidor/guardian ausentes, Edge vivo; separar salud HTTP-CDP, worker persistente y arranque al logon"
+            },
+            {
+              "date": "2026-10-13",
+              "text": "Incidente operativo resuelto: servidor v1.3.0 recuperado bajo server_guardian; Edge dedicado reiniciado; Selenium adjunta correctamente; ciclo automático completó y limpió navegador_trabado."
+            },
+            {
+              "date": "2026-10-13",
+              "text": "Fase 1 estabilidad servidor+navegador: lock instancia, token persistente, /api/reload (exit 0 sin crash), guardian adopta server ajeno, Edge lanza about:blank + cierre de NTP por CDP, driver del monitor persistente entre ciclos. 410 tests OK, deployado y verificado en vivo."
+            },
+            {
+              "date": "2026-10-14",
+              "text": "Bug marca Asignado: causa raíz = Lightning confirma textarea en blur/focusout y el clic JS en Guardar no lo genera → guardaba valor viejo; además lectura ciega de campo no renderizado. Fix: blur en SET_EDITOR_VALUE_SCRIPT + lectura render-aware + reintento + outcome en estado/log. 3 leads reales corregidos a mano (Ema, Facundo, Gaston)."
+            },
+            {
+              "date": "2026-10-14",
+              "text": "Fix contaminación 'Modificar Otra información' persistida: lectura estricta del campo + strip anywhere + verificación post-Save que reescribe limpio si hay etiqueta de UI. Lead VUA0 verificado limpio ('Asignado'); Ema/Facundo/Gaston ok. 418 tests."
+            },
+            {
+              "date": "2026-10-14",
+              "text": "Lead QNxpUAG: panel no detectado (contenedor no-modal no conocido). Defensa en profundidad: firma acepta ancestros position:fixed, chequeo tardio post-marca, finalize_diag con cadena DOM de botones Save/SendEmail. 420 tests."
+            },
+            {
+              "date": "2026-10-14",
+              "text": "Diag enriquecido revelo: sin Save visible en pestaña activa (panel en otro handle o llega tarde). Nuevo: escaneo cross-handles + screenshot sin_panel_<lead>.png en ui_output. 421 tests. Pendiente: envio-whatsapp-automatico spec listo para implementar."
+            },
+            {
+              "date": "2026-10-14",
+              "text": "envio-whatsapp-automatico implementado: intento '1 INT Envio WhatsApp' en Otra información (reemplaza Asignado), clic Send To Whatsapp + confirmacion por toast, toggle UI 'WhatsApp auto' (default off), solo AR. 432 tests. Pendiente: validación en vivo."
+            },
+            {
+              "date": "2026-10-15",
+              "text": "Fix WA: línea 'Asignado' suelta (panel Save/flow) se elimina en rama WhatsApp — drop_take_mark + pasada de limpieza post-envío. 434 tests ok"
+            },
+            {
+              "date": "2026-10-15",
+              "text": "Avances consolidados: ventana dedicada reutilizable del monitor; cierre de pestaña about:blank huérfana; finalización Contact Client con marca verificable; franjas con autoguardado; merge de estado para no pisar cambios del usuario; Limpiar lista implementado y desplegado."
+            },
+            {
+              "date": "2026-10-15",
+              "text": "Piloto real 15/10: monitor activo y sin pausa con WhatsApp auto encendido; la toma cerró panel_guardado/marca_ok, pero la confirmación quedó wa_no_confirmado. La protección evitó reintentar y duplicar el mensaje; pendiente confirmar recepción o toast."
+            },
+            {
+              "date": "2026-10-15",
+              "text": "Seguimiento operativo 15/10: otro ciclo terminó sin_panel/marca_ok pese al escaneo entre pestañas; diagnóstico y screenshot ya están habilitados, pero falta cerrar la detección residual del panel."
+            },
+            {
+              "date": "2026-10-16",
+              "text": "Reasignación por turno implementada: equipo con franjas + método, marca 'Asignado - método', modal Cambiar propietario reutilizado, WA auto off para leads reasignados. 443 tests ok"
+            },
+            {
+              "date": "2026-10-16",
+              "text": "Reasignación: método sale de preferencia_contacto del lead (whatsapp→Enviar Whatsapp, llamada→Llamarlo, otro→Gestionarlo); dropdown por persona eliminado de UI. 443 tests OK."
+            },
+            {
+              "date": "2026-10-16",
+              "text": "tz_offset por bandeja (AR +2 / CO 0 / MX -1): la línea 1 INT WhatsApp documenta la hora del país del lead. Selector en UI. 446 tests OK."
+            },
+            {
+              "date": "2026-10-16",
+              "text": "Fix reasignacion: filtra opciones 'Buscar X'/'Mostrar todos' del lookup (abrian vista Resultados sin boton confirmar -> error:confirmar) + polling del footer + fallback clic fila expandida. 448 tests OK, deployado."
+            },
+            {
+              "date": "2026-10-16",
+              "text": "Reasignacion sin comentario: al pasar lead a otra persona ya no se escribe 'Asignado - metodo' en Otra informacion (pendiente de definicion). _reasignacion_mark queda sin invocar. Outcome 'sin_comentario'. 448 tests OK, deployado."
+            },
+            {
+              "date": "2026-10-16",
+              "text": "Fix verify PickUp: clic que guarda tarde dejaba lead 'no_verificado' sin WA (owner quedaba = usuario). Ahora refresh+relectura antes de declarar fallo, 'no_verificado' reintenta 1 vez, y state['bot_owner'] distingue usuario-sesion de otro humano. 451 tests OK, deployado."
+            },
+            {
+              "date": "2026-10-16",
+              "text": "Fix confirm modal: lightning-button host + button interno matcheaban ambos -> 'ambiguous' sin click; ahora clickea el button real. Explicaba modal colgado + error:confirmar. 451 tests OK."
             }
           ]
         },
@@ -152,30 +224,6 @@
           ]
         },
         {
-          "id": "wo-rel-v1-0-piloto-ar",
-          "name": "v1.0 — Piloto AR",
-          "status": "done",
-          "progress": 100,
-          "start": "2026-10-10",
-          "end": "2026-10-10",
-          "milestone": true,
-          "release": true,
-          "updates": [
-            {
-              "date": "2026-10-09",
-              "text": "Documentación automática AR + cierre de leads: Flujo Argentina validado: 10 leads en 3min50s (~23s/lead)"
-            },
-            {
-              "date": "2026-10-09",
-              "text": "Documentación automática AR + cierre de leads: Piloto Selenium OK: lectura Salesforce, 43/43 tests"
-            },
-            {
-              "date": "2026-10-09",
-              "text": "Monitor de Bandeja (toma de leads automática): Implementado ciclo lead_monitor + SSE + guardian; falta piloto real en Salesforce"
-            }
-          ]
-        },
-        {
           "id": "wo-evaluar-ecc-y-ruflo-para",
           "name": "Evaluar ECC y Ruflo para harness experto",
           "status": "done",
@@ -183,7 +231,14 @@
           "start": "2026-10-09",
           "end": "2026-10-09",
           "estHours": 1,
-          "hours": 0.12
+          "hours": 0.12,
+          "notes": "Evaluación comparativa de arquitecturas de agentes para el harness del proyecto.",
+          "updates": [
+            {
+              "date": "2026-10-09",
+              "text": "Evaluación completada de ECC y Ruflo para definir patrones de agentes expertos."
+            }
+          ]
         },
         {
           "id": "wo-disenar-integracion-sele",
@@ -193,7 +248,14 @@
           "start": "2026-10-10",
           "end": "2026-10-10",
           "estHours": 1,
-          "hours": 0.11
+          "hours": 0.11,
+          "notes": "Diseño e integración selectiva de workflows expertos ECC en el repositorio.",
+          "updates": [
+            {
+              "date": "2026-10-10",
+              "text": "Integración selectiva de agentes expertos ECC diseñada y documentada en OpenSpec."
+            }
+          ]
         },
         {
           "id": "wo-rel-v1-0-0-documentador-pred",
@@ -204,7 +266,21 @@
           "end": "2026-10-01",
           "milestone": true,
           "release": true,
-          "updates": []
+          "notes": "Primera versión estable etiquetada. Resuelve falsos documentados con identidad por call_id.",
+          "updates": [
+            {
+              "date": "2026-10-01",
+              "text": "Identidad por Lead + call_id: un Lead ya no se marca como documentado por snapshots históricos."
+            },
+            {
+              "date": "2026-10-01",
+              "text": "Bot idempotente: lee Otra información, deduce call_id presentes y escribe solo los faltantes (estados ya_documentado y revision)."
+            },
+            {
+              "date": "2026-10-01",
+              "text": "Ejecución con run_id estable bajo lock, snapshots con content_hash y botón Reiniciar navegador del bot."
+            }
+          ]
         },
         {
           "id": "wo-rel-v1-0-10-estabilizacion-1",
@@ -215,7 +291,21 @@
           "end": "2026-10-03",
           "milestone": true,
           "release": true,
-          "updates": []
+          "notes": "Serie de estabilización 1.0.1 → 1.0.10 sobre sesión Selenium, snapshots y tiempos de Salesforce.",
+          "updates": [
+            {
+              "date": "2026-10-02",
+              "text": "v1.0.1–1.0.5: separación visual de intentos nuevos vs histórico, numeración N INT desde última lectura local y watchdog de 15 s al adjuntar Edge."
+            },
+            {
+              "date": "2026-10-02",
+              "text": "v1.0.6–1.0.9: prechequeo de navegador cerrado/trabado antes de correr, aviso de sesión vencida (403) y cierre limpio de pestaña/chromedriver."
+            },
+            {
+              "date": "2026-10-03",
+              "text": "v1.0.10: si vence la espera tras Guardar por lentitud de Salesforce, recarga y verifica el valor persistido antes de declarar error."
+            }
+          ]
         },
         {
           "id": "wo-rel-v1-1-0-cierre-de-leads-p",
@@ -226,7 +316,21 @@
           "end": "2026-10-03",
           "milestone": true,
           "release": true,
-          "updates": []
+          "notes": "Automatización de cierre masivo de Leads por motivo con conversión y verificación de propietario.",
+          "updates": [
+            {
+              "date": "2026-10-03",
+              "text": "UI de cierre por lote: selección por Lead o masiva con motivo Ilocalizable o Deja de interactuar y confirmación explícita."
+            },
+            {
+              "date": "2026-10-03",
+              "text": "Runner run_close_queue.py: edita Comentario, Cualificación y Sub-Cualificación, verifica estado Cerrado y ejecuta Convert Lead → Yes."
+            },
+            {
+              "date": "2026-10-03",
+              "text": "Verificación post-conversión esperando resultado definitivo (Cerrado + AR_LEAD_COLD) leyendo nombre visible del lookup."
+            }
+          ]
         },
         {
           "id": "wo-rel-v1-2-0-selector-pais-cam",
@@ -237,7 +341,21 @@
           "end": "2026-10-06",
           "milestone": true,
           "release": true,
-          "updates": []
+          "notes": "Soporte multipaís (AR / CO / MX) con mapeo de campos diferenciados y validación automática por prefijo telefónico.",
+          "updates": [
+            {
+              "date": "2026-10-06",
+              "text": "Selector de país/campos: AR (intentos en Otra información, cierre en Comentario) vs CO/MX (intentos en Comentario, cierre en Otra información)."
+            },
+            {
+              "date": "2026-10-06",
+              "text": "Detección automática de país por prefijo TEL1 en toda la base Wolkvox (91549 AR, 9352 MX, 957 CO) con bloqueo preventivo de bases mezcladas."
+            },
+            {
+              "date": "2026-10-06",
+              "text": "Modo de país congelado en colas y snapshots para evitar cruzar evidencias entre Otra información y Comentario."
+            }
+          ]
         },
         {
           "id": "wo-rel-v1-2-1-identidad-de-inte",
@@ -248,7 +366,21 @@
           "end": "2026-10-07",
           "milestone": true,
           "release": true,
-          "updates": []
+          "notes": "Correcciones para formatos de ID e idioma de picklists en México y Colombia + sonda real de sesión Selenium.",
+          "updates": [
+            {
+              "date": "2026-10-07",
+              "text": "Identidad de intentos agnóstica del país: compara ID completo sin asumir formato argentino, evitando duplicar intentos en México."
+            },
+            {
+              "date": "2026-10-07",
+              "text": "Soporte de Sub cualificación sin tilde en MX y validación de propietario final por país (MX_LEAD_COLD, CO_LEAD_COLD, AR_LEAD_COLD)."
+            },
+            {
+              "date": "2026-10-07",
+              "text": "Sonda real WebDriver antes de lanzar el runner con auto-reinicio único del navegador dedicado y prevención de pestañas duplicadas (283 tests)."
+            }
+          ]
         },
         {
           "id": "wo-rel-v1-3-0-monitor-de-bandej",
@@ -259,30 +391,19 @@
           "end": "2026-10-09",
           "milestone": true,
           "release": true,
+          "notes": "Monitor continuo de bandejas por país con Pick Up automático, eventos en tiempo real por SSE y guardián del servidor.",
           "updates": [
             {
               "date": "2026-10-09",
-              "text": "Documentación automática AR + cierre de leads: Flujo Argentina validado: 10 leads en 3min50s (~23s/lead)"
+              "text": "Monitor de Bandeja: revisa bandejas AR/CO/MX cada ~1 min, detecta leads Nuevos sin asignar y ejecuta Pick Up verificando propietario."
             },
             {
               "date": "2026-10-09",
-              "text": "Documentación automática AR + cierre de leads: Piloto Selenium OK: lectura Salesforce, 43/43 tests"
+              "text": "Canal SSE (/api/events) + notificaciones (banner, sonido y toast Windows) y franjas horarias configurables."
             },
             {
               "date": "2026-10-09",
-              "text": "Monitor de Bandeja (toma de leads automática): Implementado ciclo lead_monitor + SSE + guardian; falta piloto real en Salesforce"
-            },
-            {
-              "date": "2026-10-09",
-              "text": "v1.0 — Piloto AR: Documentación automática AR + cierre de leads: Flujo Argentina validado: 10 leads en 3min50s (~23s/lead)"
-            },
-            {
-              "date": "2026-10-09",
-              "text": "v1.0 — Piloto AR: Documentación automática AR + cierre de leads: Piloto Selenium OK: lectura Salesforce, 43/43 tests"
-            },
-            {
-              "date": "2026-10-09",
-              "text": "v1.0 — Piloto AR: Monitor de Bandeja (toma de leads automática): Implementado ciclo lead_monitor + SSE + guardian; falta piloto real en Salesforce"
+              "text": "server_guardian.py: supervisión y auto-reinicio con backoff de ui_server.py + logs de caída integrados en INICIAR.bat."
             }
           ]
         }

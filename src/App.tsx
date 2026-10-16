@@ -11,6 +11,7 @@ import {
 
 import { AgentGuideDialog } from "@/components/AgentGuideDialog"
 import { GanttChart } from "@/components/GanttChart"
+import { SynopticOverview } from "@/components/SynopticOverview"
 import { TaskDetailSheet } from "@/components/TaskDetailSheet"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -71,10 +72,11 @@ function App() {
         .map((p) => ({
           ...p,
           tasks: p.tasks.filter(
-            (t) => statusFilter === "all" || t.status === statusFilter
+            (t) =>
+              t.release || statusFilter === "all" || t.status === statusFilter
           ),
         }))
-        .filter((p) => p.tasks.length > 0),
+        .filter((p) => p.tasks.some((t) => !t.release)),
     [projectFilter, statusFilter]
   )
 
@@ -179,6 +181,15 @@ function App() {
               hint="registradas por sesiones de trabajo"
             />
           </div>
+
+          {/* cuadro sinóptico: últimos 5 avances + versiones + horas y cosas desarrolladas */}
+          <SynopticOverview
+            projects={ganttData.projects.filter(
+              (p) => projectFilter === "all" || p.id === projectFilter
+            )}
+            sessions={sessions}
+            onSelect={(task, project) => setSelected({ task, project })}
+          />
 
           {/* toolbar */}
           <div className="flex flex-wrap items-center gap-3">

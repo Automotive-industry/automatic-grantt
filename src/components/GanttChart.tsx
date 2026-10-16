@@ -27,7 +27,7 @@ import {
 import { cn } from "@/lib/utils"
 
 const SIDEBAR_W = 340
-const PROJECT_H = 34
+const PROJECT_H = 42
 const TASK_H = 46
 const HEADER_H = 52
 
@@ -320,30 +320,58 @@ function ProjectRow({
           {avg}%
         </span>
       </div>
-      {/* tags de versión sobre la línea de tiempo del proyecto */}
+      {/* tags de versión sobre la línea de tiempo del proyecto (con anti-solapamiento) */}
       <div className="relative flex-1">
-        {releases.map((t, i) => {
-          return (
-            <Tooltip key={t.id}>
-              <TooltipTrigger asChild>
-                <button
-                  onClick={() => onSelect(t, project)}
-                  className={cn(
-                    "absolute z-30 flex -translate-x-1/2 items-center gap-1 whitespace-nowrap rounded-full border border-primary/60 bg-primary/25 px-1.5 py-px text-[9px] font-semibold text-primary backdrop-blur transition-colors hover:bg-primary/40",
-                    i % 2 === 0 ? "top-[3px]" : "bottom-[3px]"
-                  )}
-                  style={{ left: dayToX(t.end, timelineStart, pxPerDay) }}
-                >
-                  <Rocket className="size-2.5" />
-                  {shortName(t)}
-                </button>
-              </TooltipTrigger>
-              <TooltipContent side="top">
-                {t.name} — {format(parseISO(t.end), "d MMM yyyy", { locale: es })}
-              </TooltipContent>
-            </Tooltip>
-          )
-        })}
+        {(() => {
+          const laneRight = [-Infinity, -Infinity]
+          const MIN_GAP = 58
+          return releases.map((t, i) => {
+            const rawX = dayToX(t.end, timelineStart, pxPerDay)
+            const lane =
+              rawX - laneRight[0] >= MIN_GAP
+                ? 0
+                : rawX - laneRight[1] >= MIN_GAP
+                  ? 1
+                  : i % 2
+            const x = Math.max(rawX, laneRight[lane] + MIN_GAP)
+            laneRight[lane] = x
+            return (
+              <Tooltip key={t.id}>
+                <TooltipTrigger asChild>
+                  <button
+                    onClick={() => onSelect(t, project)}
+                    className={cn(
+                      "absolute z-30 flex -translate-x-1/2 items-center gap-1 whitespace-nowrap rounded-full border border-primary/70 bg-primary/25 px-1.5 py-px text-[9px] font-semibold text-primary shadow-sm backdrop-blur transition-colors hover:bg-primary/40",
+                      lane === 0 ? "top-[3px]" : "bottom-[3px]"
+                    )}
+                    style={{ left: x }}
+                  >
+                    <Rocket className="size-2.5" />
+                    {shortName(t)}
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent side="top" className="max-w-72">
+                  <div className="space-y-1 text-xs">
+                    <div className="font-semibold">{t.name}</div>
+                    <div className="text-muted-foreground">
+                      {format(parseISO(t.end), "d MMM yyyy", { locale: es })}
+                    </div>
+                    {t.notes && (
+                      <div className="text-muted-foreground">{t.notes}</div>
+                    )}
+                    {t.updates && t.updates.length > 0 && (
+                      <ul className="space-y-0.5 border-t border-border/50 pt-1 text-[11px] text-muted-foreground">
+                        {t.updates.slice(0, 3).map((u, idx) => (
+                          <li key={idx}>· {u.text}</li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+                </TooltipContent>
+              </Tooltip>
+            )
+          })
+        })()}
       </div>
     </div>
   )

@@ -281,6 +281,7 @@ switch (command) {
     const since = prevRelease ? prevRelease.end : "0000-01-01"
     const updates = []
     for (const t of project.tasks) {
+      if (t.release) continue
       for (const u of t.updates ?? []) {
         if (u.date >= since && u.date <= date)
           updates.push({ date: u.date, text: `${t.name}: ${u.text}` })

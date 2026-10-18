@@ -1,7 +1,7 @@
 {
   "meta": {
     "title": "Tablero de proyectos — Data & Automatización",
-    "lastUpdated": "2026-10-16"
+    "lastUpdated": "2026-10-17"
   },
   "projects": [
     {
@@ -32,7 +32,7 @@
         {
           "id": "wv-monitor",
           "name": "Monitor de Bandeja (toma de leads automática)",
-          "status": "blocked",
+          "status": "in_progress",
           "progress": 98,
           "start": "2026-09-21",
           "end": "2026-10-16",
@@ -122,9 +122,16 @@
             {
               "date": "2026-10-16",
               "text": "Fix confirm modal: lightning-button host + button interno matcheaban ambos -> 'ambiguous' sin click; ahora clickea el button real. Explicaba modal colgado + error:confirmar. 451 tests OK."
+            },
+            {
+              "date": "2026-10-17",
+              "text": "Mitigacion navegador_trabado: Edge ya no suspende pestanas (--disable-features=msEfficiencyMode,msSleepingTabs + no throttling) y reinicio automatico cada 4h ocioso para la RAM. Fix equipo: persona sin franja ahora permitida (la validacion bloqueaba el guardado y quedaba config vieja -> lead asignado a quien no debia)."
+            },
+            {
+              "date": "2026-10-17",
+              "text": "Modelo estricto de turnos: leads solo se toman dentro de franjas (Horario del monitor = turno propio, equipo = reasignacion). schedule vacio ya no significa siempre activo: sin franja propia ni de equipo vigente el ciclo pausa con fuera_de_horario y el lead espera en la cola. Franja propia activa tiene prioridad sobre equipo (equipo=None, sin delegacion ni WA). Revisar ahora sigue ignorando franjas. Verificado en vivo: paused=fuera_de_horario con enabled=True sin turno. 455 tests + ruff OK, dist sincronizado y server recargado."
             }
-          ],
-          "blocker": "Monitor de bandeja se detiene intermitente: pierde conexion con el navegador Edge/servidor (sospecha: suspension de pestanas de Edge en el navegador dedicado). Requiere reinicio manual del navegador del bot."
+          ]
         },
         {
           "id": "wv-test-col",
@@ -207,6 +214,10 @@
             {
               "date": "2026-10-16",
               "text": "Fix verificacion PickUp: clic que guarda tarde dejaba 'no_verificado' sin marca ni WhatsApp aunque el owner ya era el usuario. Ahora refresh+relectura, 'no_verificado' reintenta 1 vez, y state.bot_owner distingue al usuario de sesion de otro humano. 451 tests + ruff OK, deployado en dist."
+            },
+            {
+              "date": "2026-10-17",
+              "text": "Las franjas del equipo ahora TAMBIEN gatean la toma: un turno de equipo activo dispara el ciclo automatico y reasigna el lead a esa persona (antes solo se evaluaba post-pickup como fallback). La franja propia del monitor tiene prioridad: dentro de ella no se delega."
             }
           ],
           "hours": 6.01

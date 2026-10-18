@@ -123,8 +123,8 @@ export function SynopticOverview({
 
       {!collapsed && (
         <CardContent className="grid gap-6 p-5 lg:grid-cols-12">
-          {/* COLUMNA IZQUIERDA: ÚLTIMOS 5 AVANCES */}
-          <div className="space-y-3 lg:col-span-5">
+          {/* COLUMNA DERECHA: ÚLTIMOS 5 AVANCES */}
+          <div className="order-2 space-y-3 lg:col-span-5">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-foreground/90">
                 <Sparkles className="size-3.5 text-primary" />
@@ -199,8 +199,8 @@ export function SynopticOverview({
             </div>
           </div>
 
-          {/* COLUMNA DERECHA: CUADRO SINÓPTICO POR PROYECTO (VERSIONES + HORAS Y COSAS DESARROLLADAS) */}
-          <div className="space-y-4 lg:col-span-7">
+          {/* COLUMNA IZQUIERDA: CUADRO SINÓPTICO POR PROYECTO (VERSIONES + HORAS Y COSAS DESARROLLADAS) */}
+          <div className="order-1 space-y-4 lg:col-span-7">
             <div className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-foreground/90">
               <History className="size-3.5 text-primary" />
               Sinóptico por Proyecto — Versiones, Horas y Desarrollos

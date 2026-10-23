@@ -66,6 +66,25 @@
       "end": "2026-10-16T20:43:03.476Z",
       "hours": 6,
       "manual": true
+    },
+    {
+      "taskId": "mx-auditoria-y-limpieza-bd-",
+      "start": "2026-10-20T14:28:18.668Z",
+      "end": "2026-10-20T14:28:19.536Z",
+      "hours": 0
+    },
+    {
+      "taskId": "mx-auditoria-y-limpieza-bd-",
+      "start": "2026-10-20T14:34:09.032Z",
+      "end": "2026-10-20T14:34:09.040Z",
+      "hours": 4,
+      "manual": true
+    },
+    {
+      "taskId": "wv-monitor",
+      "start": "2026-10-22T14:14:08.219Z",
+      "end": "2026-10-22T14:44:35.061Z",
+      "hours": 0.51
     }
   ]
 }

@@ -410,6 +410,13 @@ function TaskRow({
     ? differenceInCalendarDays(projection.projectedEnd, timelineStart) * pxPerDay
     : null
 
+  const taskSessions = sessions.filter((s) => s.taskId === task.id)
+  const workingNow = taskSessions.some((s) => s.end === null)
+  const lastActivity = [
+    ...(task.updates ?? []).map((u) => u.date),
+    ...taskSessions.map((s) => (s.end ?? s.start).slice(0, 10)),
+  ].sort().pop()
+
   const hoursLabel =
     task.hours !== undefined || task.estHours !== undefined
       ? `${task.hours ?? 0}h${task.estHours ? `/${task.estHours}h` : ""}`
@@ -433,6 +440,20 @@ function TaskRow({
           <span className="truncate text-xs font-medium">{task.name}</span>
           {task.blocker && (
             <AlertTriangle className="size-3 shrink-0 text-amber-500" />
+          )}
+          {workingNow ? (
+            <span className="ml-auto flex shrink-0 items-center gap-1 rounded-full bg-emerald-500/15 px-1.5 py-px text-[9px] font-semibold text-emerald-400">
+              <span className="size-1.5 rounded-full bg-emerald-400" />
+              trabajando ahora
+            </span>
+          ) : (
+            task.status === "in_progress" &&
+            lastActivity && (
+              <span className="ml-auto shrink-0 text-[9px] text-muted-foreground">
+                últ. avance{" "}
+                {format(parseISO(lastActivity), "d MMM", { locale: es })}
+              </span>
+            )
           )}
         </div>
         <div className="flex items-center gap-1.5">
@@ -461,6 +482,13 @@ function TaskRow({
         className="relative flex-1 cursor-pointer"
         onClick={() => onSelect(task, project)}
       >
+        {workingNow && !task.milestone && (
+          <span
+            className="absolute top-1/2 z-[11] size-2.5 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-background bg-emerald-400 shadow"
+            style={{ left: x + (w * task.progress) / 100 }}
+            title="Sesión de trabajo abierta"
+          />
+        )}
         {task.milestone ? (
           <Tooltip>
             <TooltipTrigger asChild>

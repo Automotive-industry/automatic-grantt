@@ -1,7 +1,7 @@
 {
   "meta": {
     "title": "Tablero de proyectos — Data & Automatización",
-    "lastUpdated": "2026-10-17"
+    "lastUpdated": "2026-10-23"
   },
   "projects": [
     {
@@ -32,11 +32,11 @@
         {
           "id": "wv-monitor",
           "name": "Monitor de Bandeja (toma de leads automática)",
-          "status": "in_progress",
-          "progress": 98,
+          "status": "done",
+          "progress": 100,
           "start": "2026-09-21",
           "end": "2026-10-16",
-          "hours": 16.74,
+          "hours": 17.25,
           "estHours": 20,
           "deps": [
             "wv-doc-ar"
@@ -130,6 +130,30 @@
             {
               "date": "2026-10-17",
               "text": "Modelo estricto de turnos: leads solo se toman dentro de franjas (Horario del monitor = turno propio, equipo = reasignacion). schedule vacio ya no significa siempre activo: sin franja propia ni de equipo vigente el ciclo pausa con fuera_de_horario y el lead espera en la cola. Franja propia activa tiene prioridad sobre equipo (equipo=None, sin delegacion ni WA). Revisar ahora sigue ignorando franjas. Verificado en vivo: paused=fuera_de_horario con enabled=True sin turno. 455 tests + ruff OK, dist sincronizado y server recargado."
+            },
+            {
+              "date": "2026-10-19",
+              "text": "Revertido modelo estricto de turnos: los leads fuera de franja los tomaba un compañero y los reasignaba a José — no era el bot. Vuelve semántica anterior: schedule vacío = siempre activo; equipo se evalúa siempre en el ciclo; franjas del equipo no extienden el horario. 455 tests OK, deployado."
+            },
+            {
+              "date": "2026-10-19",
+              "text": "CAUSA RAIZ del stopper navegador_trabado: NEW_SESSION al perfil dedicado tarda ~37s pero ATTACH_SESSION_TIMEOUT era 15s -> cada ciclo abortaba la sesion a medio formar. Subido a 60s -> monitor recupero (lead tomado + wa_ok). No era suspension de pestanas."
+            },
+            {
+              "date": "2026-10-19",
+              "text": "Modelo estricto de turnos re-aplicado (las tomas fuera de franja venian de 'Revisar ahora' que ignoraba horario). Ahora: sin turno vigente ni auto ni manual tocan leads — el chequeo manual corre en modo prueba (detectado, reprocesable). Franjas del equipo se autoguardan al agregar/quitar. Texto WA: 'N INT Se envía WhatsApp dd/mm/aaaa hh:mm'. 456 tests OK, deployado."
+            },
+            {
+              "date": "2026-10-20",
+              "text": "Auto-recuperacion: tras 3 ciclos navegador_trabado el server reinicia el Edge dedicado solo (cooldown 10 min). Limpieza del about:blank inicial tras el relanzado. UI: checkbox Notificar -> Notification API del browser + toast Windows ya existente por lead tomado. Columnas ocultables/movibles/redimensionables con persistencia. 461 tests OK"
+            },
+            {
+              "date": "2026-10-21",
+              "text": "Fix MX: bandeja vacia daba bandeja_error invisible (Sin resultados sin grilla -> ReportEmptyError). Bug grave: create_driver lanzaba Edge fantasma port=0 sin flags anti-suspension; restart ahora mata por user-data-dir. 468 tests OK"
+            },
+            {
+              "date": "2026-10-22",
+              "text": "Prefs de UI movidas al servidor (/api/ui-prefs): vista de columnas sobrevive cambio de navegador. Permiso de notificaciones pedido en primer gesto + boton 'Probar aviso'. Toast backend ahora avisa leads nuevos, no solo tomados."
             }
           ]
         },
@@ -159,28 +183,15 @@
           ]
         },
         {
-          "id": "wv-duplicados",
-          "name": "Verificación de duplicados / fake numbers",
-          "status": "pending",
-          "progress": 0,
-          "start": "2026-10-26",
-          "end": "2026-11-06",
-          "estHours": 12,
-          "deps": [
-            "wv-test-col"
-          ]
-        },
-        {
           "id": "wv-asignacion",
           "name": "Asignación automática de leads",
           "status": "in_progress",
           "progress": 60,
-          "start": "2026-11-02",
-          "end": "2026-11-13",
+          "start": "2026-10-16",
+          "end": "2026-10-30",
           "estHours": 16,
           "deps": [
-            "wv-monitor",
-            "wv-duplicados"
+            "wv-monitor"
           ],
           "updates": [
             {
@@ -221,6 +232,19 @@
             }
           ],
           "hours": 6.01
+        },
+        {
+          "id": "wv-duplicados",
+          "name": "Verificación de duplicados / fake numbers",
+          "status": "pending",
+          "progress": 0,
+          "start": "2026-11-02",
+          "end": "2026-11-13",
+          "estHours": 12,
+          "deps": [
+            "wv-test-col",
+            "wv-asignacion"
+          ]
         },
         {
           "id": "wv-bandejas",
@@ -453,6 +477,194 @@
               "text": "server_guardian.py: supervisión y auto-reinicio con backoff de ui_server.py + logs de caída integrados en INICIAR.bat."
             }
           ]
+        },
+        {
+          "id": "wo-rel-v1-4-0-monitor-equipo-re",
+          "name": "v1.4.0 — Monitor: equipo+reasignación, WhatsApp auto, UI compacta, auto-recuperación",
+          "status": "done",
+          "progress": 100,
+          "start": "2026-10-21",
+          "end": "2026-10-21",
+          "milestone": true,
+          "release": true,
+          "updates": [
+            {
+              "date": "2026-10-09",
+              "text": "Documentación automática AR + cierre de leads: Flujo Argentina validado: 10 leads en 3min50s (~23s/lead)"
+            },
+            {
+              "date": "2026-10-09",
+              "text": "Documentación automática AR + cierre de leads: Piloto Selenium OK: lectura Salesforce, 43/43 tests"
+            },
+            {
+              "date": "2026-10-09",
+              "text": "Monitor de Bandeja (toma de leads automática): Implementado ciclo lead_monitor + SSE + guardian; falta piloto real en Salesforce"
+            },
+            {
+              "date": "2026-10-09",
+              "text": "Evaluar ECC y Ruflo para harness experto: Evaluación completada de ECC y Ruflo para definir patrones de agentes expertos."
+            },
+            {
+              "date": "2026-10-10",
+              "text": "Diseñar integración selectiva ECC: Integración selectiva de agentes expertos ECC diseñada y documentada en OpenSpec."
+            },
+            {
+              "date": "2026-10-11",
+              "text": "Monitor de Bandeja (toma de leads automática): Diagnóstico estabilidad: servidor/guardian ausentes, Edge vivo; separar salud HTTP-CDP, worker persistente y arranque al logon"
+            },
+            {
+              "date": "2026-10-13",
+              "text": "Monitor de Bandeja (toma de leads automática): Incidente operativo resuelto: servidor v1.3.0 recuperado bajo server_guardian; Edge dedicado reiniciado; Selenium adjunta correctamente; ciclo automático completó y limpió navegador_trabado."
+            },
+            {
+              "date": "2026-10-13",
+              "text": "Monitor de Bandeja (toma de leads automática): Fase 1 estabilidad servidor+navegador: lock instancia, token persistente, /api/reload (exit 0 sin crash), guardian adopta server ajeno, Edge lanza about:blank + cierre de NTP por CDP, driver del monitor persistente entre ciclos. 410 tests OK, deployado y verificado en vivo."
+            },
+            {
+              "date": "2026-10-14",
+              "text": "Monitor de Bandeja (toma de leads automática): Bug marca Asignado: causa raíz = Lightning confirma textarea en blur/focusout y el clic JS en Guardar no lo genera → guardaba valor viejo; además lectura ciega de campo no renderizado. Fix: blur en SET_EDITOR_VALUE_SCRIPT + lectura render-aware + reintento + outcome en estado/log. 3 leads reales corregidos a mano (Ema, Facundo, Gaston)."
+            },
+            {
+              "date": "2026-10-14",
+              "text": "Monitor de Bandeja (toma de leads automática): Fix contaminación 'Modificar Otra información' persistida: lectura estricta del campo + strip anywhere + verificación post-Save que reescribe limpio si hay etiqueta de UI. Lead VUA0 verificado limpio ('Asignado'); Ema/Facundo/Gaston ok. 418 tests."
+            },
+            {
+              "date": "2026-10-14",
+              "text": "Monitor de Bandeja (toma de leads automática): Lead QNxpUAG: panel no detectado (contenedor no-modal no conocido). Defensa en profundidad: firma acepta ancestros position:fixed, chequeo tardio post-marca, finalize_diag con cadena DOM de botones Save/SendEmail. 420 tests."
+            },
+            {
+              "date": "2026-10-14",
+              "text": "Monitor de Bandeja (toma de leads automática): Diag enriquecido revelo: sin Save visible en pestaña activa (panel en otro handle o llega tarde). Nuevo: escaneo cross-handles + screenshot sin_panel_<lead>.png en ui_output. 421 tests. Pendiente: envio-whatsapp-automatico spec listo para implementar."
+            },
+            {
+              "date": "2026-10-14",
+              "text": "Monitor de Bandeja (toma de leads automática): envio-whatsapp-automatico implementado: intento '1 INT Envio WhatsApp' en Otra información (reemplaza Asignado), clic Send To Whatsapp + confirmacion por toast, toggle UI 'WhatsApp auto' (default off), solo AR. 432 tests. Pendiente: validación en vivo."
+            },
+            {
+              "date": "2026-10-15",
+              "text": "Monitor de Bandeja (toma de leads automática): Fix WA: línea 'Asignado' suelta (panel Save/flow) se elimina en rama WhatsApp — drop_take_mark + pasada de limpieza post-envío. 434 tests ok"
+            },
+            {
+              "date": "2026-10-15",
+              "text": "Monitor de Bandeja (toma de leads automática): Avances consolidados: ventana dedicada reutilizable del monitor; cierre de pestaña about:blank huérfana; finalización Contact Client con marca verificable; franjas con autoguardado; merge de estado para no pisar cambios del usuario; Limpiar lista implementado y desplegado."
+            },
+            {
+              "date": "2026-10-15",
+              "text": "Monitor de Bandeja (toma de leads automática): Piloto real 15/10: monitor activo y sin pausa con WhatsApp auto encendido; la toma cerró panel_guardado/marca_ok, pero la confirmación quedó wa_no_confirmado. La protección evitó reintentar y duplicar el mensaje; pendiente confirmar recepción o toast."
+            },
+            {
+              "date": "2026-10-15",
+              "text": "Monitor de Bandeja (toma de leads automática): Seguimiento operativo 15/10: otro ciclo terminó sin_panel/marca_ok pese al escaneo entre pestañas; diagnóstico y screenshot ya están habilitados, pero falta cerrar la detección residual del panel."
+            },
+            {
+              "date": "2026-10-16",
+              "text": "Monitor de Bandeja (toma de leads automática): Reasignación por turno implementada: equipo con franjas + método, marca 'Asignado - método', modal Cambiar propietario reutilizado, WA auto off para leads reasignados. 443 tests ok"
+            },
+            {
+              "date": "2026-10-16",
+              "text": "Monitor de Bandeja (toma de leads automática): Reasignación: método sale de preferencia_contacto del lead (whatsapp→Enviar Whatsapp, llamada→Llamarlo, otro→Gestionarlo); dropdown por persona eliminado de UI. 443 tests OK."
+            },
+            {
+              "date": "2026-10-16",
+              "text": "Monitor de Bandeja (toma de leads automática): tz_offset por bandeja (AR +2 / CO 0 / MX -1): la línea 1 INT WhatsApp documenta la hora del país del lead. Selector en UI. 446 tests OK."
+            },
+            {
+              "date": "2026-10-16",
+              "text": "Monitor de Bandeja (toma de leads automática): Fix reasignacion: filtra opciones 'Buscar X'/'Mostrar todos' del lookup (abrian vista Resultados sin boton confirmar -> error:confirmar) + polling del footer + fallback clic fila expandida. 448 tests OK, deployado."
+            },
+            {
+              "date": "2026-10-16",
+              "text": "Monitor de Bandeja (toma de leads automática): Reasignacion sin comentario: al pasar lead a otra persona ya no se escribe 'Asignado - metodo' en Otra informacion (pendiente de definicion). _reasignacion_mark queda sin invocar. Outcome 'sin_comentario'. 448 tests OK, deployado."
+            },
+            {
+              "date": "2026-10-16",
+              "text": "Monitor de Bandeja (toma de leads automática): Fix verify PickUp: clic que guarda tarde dejaba lead 'no_verificado' sin WA (owner quedaba = usuario). Ahora refresh+relectura antes de declarar fallo, 'no_verificado' reintenta 1 vez, y state['bot_owner'] distingue usuario-sesion de otro humano. 451 tests OK, deployado."
+            },
+            {
+              "date": "2026-10-16",
+              "text": "Monitor de Bandeja (toma de leads automática): Fix confirm modal: lightning-button host + button interno matcheaban ambos -> 'ambiguous' sin click; ahora clickea el button real. Explicaba modal colgado + error:confirmar. 451 tests OK."
+            },
+            {
+              "date": "2026-10-16",
+              "text": "Asignación automática de leads: Equipo por turnos: seccion Equipo en la UI (nombre exacto de Salesforce + franjas hh:mm propias por persona), PUT /api/monitor/equipo, persistido en monitor_state.equipo. Sin selector de metodo: el metodo sale del lead."
+            },
+            {
+              "date": "2026-10-16",
+              "text": "Asignación automática de leads: Encargada activa: primera persona cuya franja cubre la hora actual (solapes gana la primera). Si coincide con el usuario de la sesion, flujo normal; si no hay equipo/franja, comportamiento previo intacto."
+            },
+            {
+              "date": "2026-10-16",
+              "text": "Asignación automática de leads: Reasignacion via modal 'Cambiar propietario' (shadow DOM): abre dialogo, espera el input del lookup con polling + settle, tipea el nombre, elige la opcion registro, confirma y RELEE el propietario para verificar. Outcome: reasignado | reasignacion_error:modal|busqueda|opcion|confirmar|verificacion. Si falla, el lead queda con el bot (nada se pierde)."
+            },
+            {
+              "date": "2026-10-16",
+              "text": "Asignación automática de leads: Reglas: leads reasignados JAMAS reciben WhatsApp automatico (saldria de la sesion del bot). Comentario de asignacion pendiente de definicion - por ahora no escribe nada en Otra informacion (sin_comentario)."
+            },
+            {
+              "date": "2026-10-16",
+              "text": "Asignación automática de leads: Fix carrera lookup: el input 'Buscar Usuarios' se monta despues del modal y tarda en escuchar (pegar enseguida no busca). Ahora polling del input + settle 3s + re-tipeo una vez si no hay opciones."
+            },
+            {
+              "date": "2026-10-16",
+              "text": "Asignación automática de leads: Fix selector de resultados: las opciones 'Buscar X'/'Mostrar todos los resultados' tambien contienen el nombre y abrian la vista expandida sin boton confirmar (error:confirmar). Ahora se filtran y, si la vista expandida abre, se clica la fila del registro."
+            },
+            {
+              "date": "2026-10-16",
+              "text": "Asignación automática de leads: Fix boton confirmar: lightning-button host + su button interno matcheaban ambos la etiqueta -> script devolvia 'ambiguous' sin clicar y el modal quedaba colgado. Ahora clickea el button real + polling del footer."
+            },
+            {
+              "date": "2026-10-16",
+              "text": "Asignación automática de leads: Fix verificacion PickUp: clic que guarda tarde dejaba 'no_verificado' sin marca ni WhatsApp aunque el owner ya era el usuario. Ahora refresh+relectura, 'no_verificado' reintenta 1 vez, y state.bot_owner distingue al usuario de sesion de otro humano. 451 tests + ruff OK, deployado en dist."
+            },
+            {
+              "date": "2026-10-17",
+              "text": "Monitor de Bandeja (toma de leads automática): Mitigacion navegador_trabado: Edge ya no suspende pestanas (--disable-features=msEfficiencyMode,msSleepingTabs + no throttling) y reinicio automatico cada 4h ocioso para la RAM. Fix equipo: persona sin franja ahora permitida (la validacion bloqueaba el guardado y quedaba config vieja -> lead asignado a quien no debia)."
+            },
+            {
+              "date": "2026-10-17",
+              "text": "Monitor de Bandeja (toma de leads automática): Modelo estricto de turnos: leads solo se toman dentro de franjas (Horario del monitor = turno propio, equipo = reasignacion). schedule vacio ya no significa siempre activo: sin franja propia ni de equipo vigente el ciclo pausa con fuera_de_horario y el lead espera en la cola. Franja propia activa tiene prioridad sobre equipo (equipo=None, sin delegacion ni WA). Revisar ahora sigue ignorando franjas. Verificado en vivo: paused=fuera_de_horario con enabled=True sin turno. 455 tests + ruff OK, dist sincronizado y server recargado."
+            },
+            {
+              "date": "2026-10-17",
+              "text": "Asignación automática de leads: Las franjas del equipo ahora TAMBIEN gatean la toma: un turno de equipo activo dispara el ciclo automatico y reasigna el lead a esa persona (antes solo se evaluaba post-pickup como fallback). La franja propia del monitor tiene prioridad: dentro de ella no se delega."
+            },
+            {
+              "date": "2026-10-19",
+              "text": "Monitor de Bandeja (toma de leads automática): Revertido modelo estricto de turnos: los leads fuera de franja los tomaba un compañero y los reasignaba a José — no era el bot. Vuelve semántica anterior: schedule vacío = siempre activo; equipo se evalúa siempre en el ciclo; franjas del equipo no extienden el horario. 455 tests OK, deployado."
+            },
+            {
+              "date": "2026-10-19",
+              "text": "Monitor de Bandeja (toma de leads automática): CAUSA RAIZ del stopper navegador_trabado: NEW_SESSION al perfil dedicado tarda ~37s pero ATTACH_SESSION_TIMEOUT era 15s -> cada ciclo abortaba la sesion a medio formar. Subido a 60s -> monitor recupero (lead tomado + wa_ok). No era suspension de pestanas."
+            },
+            {
+              "date": "2026-10-19",
+              "text": "Monitor de Bandeja (toma de leads automática): Modelo estricto de turnos re-aplicado (las tomas fuera de franja venian de 'Revisar ahora' que ignoraba horario). Ahora: sin turno vigente ni auto ni manual tocan leads — el chequeo manual corre en modo prueba (detectado, reprocesable). Franjas del equipo se autoguardan al agregar/quitar. Texto WA: 'N INT Se envía WhatsApp dd/mm/aaaa hh:mm'. 456 tests OK, deployado."
+            },
+            {
+              "date": "2026-10-20",
+              "text": "Monitor de Bandeja (toma de leads automática): Auto-recuperacion: tras 3 ciclos navegador_trabado el server reinicia el Edge dedicado solo (cooldown 10 min). Limpieza del about:blank inicial tras el relanzado. UI: checkbox Notificar -> Notification API del browser + toast Windows ya existente por lead tomado. Columnas ocultables/movibles/redimensionables con persistencia. 461 tests OK"
+            }
+          ]
+        },
+        {
+          "id": "wo-rel-v1-4-1-fixes-bandeja-mx-",
+          "name": "v1.4.1 — Fixes: bandeja MX, Edge fantasma, prefs servidor, notificaciones",
+          "status": "done",
+          "progress": 100,
+          "start": "2026-10-22",
+          "end": "2026-10-22",
+          "milestone": true,
+          "release": true,
+          "updates": [
+            {
+              "date": "2026-10-21",
+              "text": "Monitor de Bandeja (toma de leads automática): Fix MX: bandeja vacia daba bandeja_error invisible (Sin resultados sin grilla -> ReportEmptyError). Bug grave: create_driver lanzaba Edge fantasma port=0 sin flags anti-suspension; restart ahora mata por user-data-dir. 468 tests OK"
+            },
+            {
+              "date": "2026-10-22",
+              "text": "Monitor de Bandeja (toma de leads automática): Prefs de UI movidas al servidor (/api/ui-prefs): vista de columnas sobrevive cambio de navegador. Permiso de notificaciones pedido en primer gesto + boton 'Probar aviso'. Toast backend ahora avisa leads nuevos, no solo tomados."
+            }
+          ]
         }
       ]
     },
@@ -501,7 +713,18 @@
           "blocker": "Esperando datos de R-Solve",
           "deps": [
             "mx-bd"
-          ]
+          ],
+          "updates": [
+            {
+              "date": "2026-10-20",
+              "text": "Sin BD de ventas reales R-Solve no se puede construir target de venta real; con el target actual (Cualificación) el modelo aprendería el proceso de pre-clasificación, no la intención de compra."
+            },
+            {
+              "date": "2026-10-23",
+              "text": "Nota actualizada con campos minimos, clave de cruce y ventana de atribucion a evaluar"
+            }
+          ],
+          "notes": "QUE SE NECESITA DE R-SOLVE: tabla de ventas reales 2026 con clave de cruce a Salesforce (Lead ID ideal; si no, telefono/email normalizados + concesionario + fecha). Campos minimos: id venta, fecha factura/entrega, modelo, version, concesionario, lead id o datos de contacto, canal de origen. SIN esta BD el target sigue siendo Cualificacion (proxy sesgado por plataforma/formulario). Riesgo: el telefono viene corrupto en el exporte Salesforce (notacion cientifica), por eso el cruce por telefono exige re-exporte previo. Evaluar: ventana de atribucion lead->venta (30/60/90 dias), ventas sin lead, leads con venta en otro concesionario."
         },
         {
           "id": "mx-train",
@@ -514,7 +737,18 @@
           "deps": [
             "mx-rsolve"
           ],
-          "blocker": "Depende de suscripciones Codex / Devin"
+          "blocker": "Depende de suscripciones Codex / Devin",
+          "updates": [
+            {
+              "date": "2026-10-20",
+              "text": "Bloqueado por hallazgos BD 2026: antes de reentrenar corregir bugs B1 (one-hot miércoles/sábado), B2 (train.py roto), B3 (umbral), B4 (split temporal). Ver docs/ANALISIS_ESTRATEGICO_2026-10.md §2.2"
+            },
+            {
+              "date": "2026-10-23",
+              "text": "Nota actualizada con prerequisitos (a)-(h) antes de entrenar. Se crearon tareas previas: dudas Q1-Q12, fix bugs B1-B7, script limpieza v3, target policy + split temporal"
+            }
+          ],
+          "notes": "PREREQUISITOS ANTES DE ENTRENAR: (a) respuestas Q1-Q12 del encargado MX, (b) re-exporte Salesforce sin Excel (telefonos como texto, UTF-8), (c) script de limpieza v3 con reporte de calidad, (d) target policy versionada (Cualificacion humana en MX_LEAD_QUALIF vs venta R-Solve), (e) exclusion policy versionada (plataforma CHATBOT, formularios pre-clasificados, nulls), (f) bugs B1-B7 corregidos y pipeline unico train/inferencia, (g) split TEMPORAL (train ene-jul, valid ago, test sep) en lugar de aleatorio estratificado, (h) sin mes como feature. Comparar baseline LogReg vs GB vs LightGBM con busqueda de hiperparametros y calibracion."
         },
         {
           "id": "mx-eval",
@@ -526,7 +760,8 @@
           "estHours": 16,
           "deps": [
             "mx-train"
-          ]
+          ],
+          "notes": "EVALUAR: ROC-AUC, PR-AUC, precision/recall/F1 por umbral, calibracion (Brier, reliability), metricas por segmento (mes, origen, formulario, plataforma, vehiculo, concesionario), holdout temporal (sep-2026), lift de negocio vs priorizacion actual, comparacion champion (modelo 2025 GB, AUC 0.78) vs challenger. Definir umbral operativo con el equipo (capacidad de llamadas de Wolkvox). Criterio de promocion y rollback documentado."
         },
         {
           "id": "mx-ms",
@@ -540,6 +775,132 @@
           "deps": [
             "mx-eval"
           ]
+        },
+        {
+          "id": "mx-auditoria-y-limpieza-bd-",
+          "name": "Auditoría y limpieza BD MX 2026 (pre-reentrenamiento)",
+          "status": "blocked",
+          "progress": 40,
+          "start": "2026-10-18",
+          "end": "2026-10-30",
+          "deps": [
+            "mx-bd"
+          ],
+          "estHours": 12,
+          "updates": [
+            {
+              "date": "2026-10-20",
+              "text": "Perfilado FULL BD MX 2026 .csv (185.350 leads, ene–oct 2026). Hallazgo crítico: 99,9% Hot en plataforma CHATBOT_QUALIF y en todos los formularios MX_Renault_2026_* → el target 'Contacto interesado' ya no refleja cualificación humana; solo MX_LEAD_QUALIF (53.830 leads, 38,9% Hot) es confiable. Teléfonos corruptos (93% en notación científica). Documento: docs/CASO_BD_MX_2026_LIMPIEZA.md"
+            },
+            {
+              "date": "2026-10-20",
+              "text": "Documentos entregados: docs/CASO_BD_MX_2026_LIMPIEZA.md (12 dudas para MX, plan de limpieza 12 pasos) y docs/ANALISIS_ESTRATEGICO_2026-10.md (bugs B1-B9, arquitectura unificada, API SF). Pendiente: enviar Q1-Q12 a MX, pedir re-exporte sin Excel."
+            },
+            {
+              "date": "2026-10-23",
+              "text": "Nota de tarea actualizada con los 10 hallazgos clave de la BD 2026 y conclusion (no reentrenar sobre BD completa)"
+            },
+            {
+              "date": "2026-10-23",
+              "text": "Plan de limpieza, dudas, investigaciones y proximos pasos documentados en el tablero (8 tareas nuevas en mx-model)"
+            }
+          ],
+          "hours": 4,
+          "blocker": "Esperando respuestas Q1-Q12 del encargado MX y re-exporte Salesforce sin Excel (teléfonos corruptos)",
+          "notes": "HALLAZGOS BD 2026 (FULL BD MX 2026 .csv, 185.350 leads x 30 cols, 01-01 a 03-10-2026, 103 concesionarios): (1) Target Cualificacion: 69% Contacto interesado, 10% Rechazo argumentado, 8% Rechazo no argumentado, 13% null (Nuevo/En curso = sin cualificar, NO son Cold). (2) Plataforma MX_LEAD_CHATBOT_QUALIF = 117.221 leads con 99,9% Hot: cualificacion automatica, no humana. Solo MX_LEAD_QUALIF (57.862 leads, 38,9% Hot) tiene cualificacion humana. (3) Formularios MX_Renault_2026_* (Kwid, Koleos, Arkana, Oroch, Duster, Kardian, Boreal) y CHATBOT-WHATSAPP = 99-100% Hot (pre-clasificados). Facebook 97,4% Hot, WhatsApp 98,9%, ONE 66,4%. (4) Drift fuerte: Hot rate mensual sube de 46% (feb) a 95% (oct); en MX_LEAD_QUALIF cae de 42% a 18% en sep. Volumen mensual x3 desde junio (26k-37k/mes). (5) 93% de telefonos corruptos en notacion cientifica (5,25523E+11): exporte paso por Excel. Bloquea dedup, deteccion de fake numbers y cruce con R-Solve. (6) Encoding mixto (byte 0xA0, no es UTF-8 limpio), delimitador punto y coma. (7) Sub-Cualificacion null en el 100% de los Hot. (8) Fecha reasignacion presente en casi todos los registros Hot y Cold: metadata de proceso, riesgo de leakage. (9) Lead ID unico sin nulos. Tipo de interes 100% Vehiculo Nuevo. (10) nombre_formulario y campana siguen siendo 1:1. CONCLUSION: no reentrenar sobre la BD completa; target humano solo en MX_LEAD_QUALIF; target definitivo = ventas reales R-Solve. Detalle: docs/CASO_BD_MX_2026_LIMPIEZA.md"
+        },
+        {
+          "id": "mx-dudas-q1-q12-mx-re-expor",
+          "name": "Dudas Q1-Q12 MX + re-exporte",
+          "status": "blocked",
+          "progress": 0,
+          "start": "2026-10-23",
+          "end": "2026-11-06",
+          "deps": [
+            "mx-auditoria-y-limpieza-bd-"
+          ],
+          "estHours": 4,
+          "notes": "DUDAS PARA EL ENCARGADO MX (detalle en docs/CASO_BD_MX_2026_LIMPIEZA.md): Q1 Que significa Contacto interesado en MX_LEAD_CHATBOT_QUALIF: lo marca el bot automaticamente o lo valida una persona? Q2 Por que los formularios MX_Renault_2026_* (Facebook) salen 99-100% Hot: pre-clasificacion del formulario (como Arkana/Oroch 2025)? Q3 Cambio el proceso de cualificacion durante 2026 (volumen x3 desde junio, Hot rate 46%->95%)? Q4 Leads con Cualificacion null y estado Nuevo/En curso: siguen vivos o son abandonados? Q5 Que representa Fecha reasignacion del lead cualificado y por que esta en Hot y Cold? Q6 Que significan Primera fecha de accion y Tiempo procesado hasta primer contacto: se cargan antes o despues de cualificar? Q7 Reglas de duplicados: mismo cliente con varios Lead ID, que lead es el valido? Q8 Que origenes/formularios deben entrar al modelo (ONE, Facebook, FIDELE, WhatsApp, LOCAL MX, RRSS)? Q9 Como se cruza un lead con la venta en R-Solve (Lead ID, telefono, email)? Q10 El Hot de Facebook/WhatsApp refleja intencion real de compra o es una regla de ruteo? Q11 Por que Sub-Cualificacion es null en el 100% de los Hot? Q12 Zona horaria y formato de fechas del exporte. RE-EXPORTE: pedir exporte directo de Salesforce (no via Excel): UTF-8, telefonos como texto, Lead ID estable, fechas ISO con TZ, delimitador documentado.",
+          "blocker": "Pendiente de reunion con el encargado MX y de que TI/MX genere el re-exporte"
+        },
+        {
+          "id": "mx-fix-bugs-b1-b7-pipeline",
+          "name": "Fix bugs B1-B7 pipeline",
+          "status": "pending",
+          "progress": 0,
+          "start": "2026-10-26",
+          "end": "2026-11-06",
+          "estHours": 12,
+          "notes": "BUGS A CORREGIR (docs/ANALISIS_ESTRATEGICO_2026-10.md sec 2.2): B1 one-hot de miercoles/sabado nunca se activa en inferencia por encoding de acentos; B2 src/train.py roto (apunta a Random Forest y rutas viejas, no reproduce el modelo); B3 umbral inconsistente (artefacto 0.35, inference.py 0.325, docs 0.35); B4 split aleatorio estratificado con mes como feature (fuga temporal); B5 pipeline duplicado entre src/predict.py y streamlit_app/core/inference.py con diferencias en encoding/fechas/cualificacion; B6 docs dicen Random Forest y el joblib es GradientBoosting; B7 entorno: .venv inexistente, doc dice Python 3.13 y corre con 3.14. PLAN: un unico modulo de preprocesamiento compartido train/inferencia + tests deterministicos (encoding, fechas, one-hot, umbral) + normalizar documentacion."
+        },
+        {
+          "id": "mx-script-limpieza-bd-v3",
+          "name": "Script limpieza BD v3",
+          "status": "pending",
+          "progress": 0,
+          "start": "2026-11-02",
+          "end": "2026-11-13",
+          "deps": [
+            "mx-auditoria-y-limpieza-bd-"
+          ],
+          "estHours": 16,
+          "notes": "REGLAS DE LIMPIEZA v3 (versionadas, con reporte de calidad por paso): 1 lectura con encoding tolerante (cp1252/latin-1) y delimitador punto y coma, normalizar a UTF-8; 2 reparar/descartar telefonos en notacion cientifica (hasta re-exporte), guardar flag telefono_corrupto; 3 excluir plataforma MX_LEAD_CHATBOT_QUALIF del training (mantener para inferencia/reporte); 4 excluir formularios con Hot rate >= 98% (Kwid, Koleos, Arkana, Oroch, Duster, Kardian, Boreal, CHATBOT-WHATSAPP) salvo confirmacion Q2; 5 excluir Cualificacion null (Nuevo/En curso) del target, no tratarlos como Cold; 6 eliminar campos post-outcome (Fecha reasignacion, Primera fecha de accion, Tiempo procesado, Estado de candidato, Sub-Cualificacion) de las features; 7 dedup por Lead ID y por cliente normalizado (telefono/email) segun Q7; 8 colapsar nombre_formulario/campana (1:1); 9 mapear schema 2026 -> columnas del modelo 2025 y documentar columnas nuevas/perdidas; 10 fechas a ISO con TZ segun Q12, derivar mes/dia/franja; 11 reporte de calidad: nulos, cardinalidad, Hot rate por mes/origen/formulario/plataforma/concesionario; 12 tests deterministicos sobre fixtures sinteticas. Salida: data/processed/mx_2026_v3.parquet + docs/REPORTE_CALIDAD_2026.md. Sin PII en el repo."
+        },
+        {
+          "id": "mx-target-policy-split-temp",
+          "name": "Target policy + split temporal",
+          "status": "pending",
+          "progress": 0,
+          "start": "2026-11-09",
+          "end": "2026-11-20",
+          "estHours": 12,
+          "notes": "DEFINIR Y VERSIONAR: (a) Target policy: opcion A Cualificacion humana solo en MX_LEAD_QUALIF (proxy, disponible ya); opcion B venta real R-Solve con ventana de atribucion (target definitivo). Documentar cual se usa en cada version del modelo. (b) Exclusion policy: plataformas, formularios, origenes, estados y meses excluidos, con justificacion de negocio. (c) Split temporal: train ene-jul 2026, validacion ago, test sep; comparar con split aleatorio para medir la caida real. (d) Evaluar si sumar datos 2025 (V2, 58.546 leads) o entrenar solo 2026 por cambio de proceso. (e) Quitar mes como feature; evaluar features de tendencia robustas. (f) Modelo por pais (MX) vs LATAM unico: decision pendiente del usuario."
+        },
+        {
+          "id": "mx-investigar-salesforce-ec",
+          "name": "Investigar Salesforce ECA API",
+          "status": "pending",
+          "progress": 0,
+          "start": "2026-10-26",
+          "end": "2026-11-20",
+          "estHours": 8,
+          "notes": "INVESTIGAR CON TI: (1) Salesforce recomienda External Client Apps (ECA) desde Spring 26; la creacion de Connected Apps nuevas esta restringida. (2) Flujo sugerido: OAuth 2.0 JWT Bearer con usuario de integracion dedicado, scopes minimos, restriccion por IP, certificado/clave privada protegidos, rotacion de tokens, logs de auditoria. (3) Permisos: lectura de Leads/Reportes; escritura solo sobre campos de comentarios/estado, con aprobacion explicita. (4) Comparar costo/riesgo vs Selenium (DOM fragil, sesion de empleado, 2FA manual, incidente documentado de updates falsos). (5) Confirmar si la org tiene API habilitada por licencia y quien aprueba la ECA. (6) Mientras tanto Selenium queda como adaptador transicional con reread+hash+verificacion post-save. Salida: documento para TI con cuadro comparativo y propuesta de ECA."
+        },
+        {
+          "id": "mx-evaluar-arquitectura-uni",
+          "name": "Evaluar arquitectura unificada",
+          "status": "pending",
+          "progress": 0,
+          "start": "2026-11-02",
+          "end": "2026-11-27",
+          "estHours": 16,
+          "notes": "EVALUAR Y DECIDIR (docs/ANALISIS_ESTRATEGICO_2026-10.md sec 5-8): (1) Monorepo modular con capa de dominio/datos compartida + adaptadores (ML, Salesforce, Wolkvox, analisis de llamadas local) en vez de fusionar codigos de golpe; ubicacion fuera de OneDrive (Downloads/_dev). (2) Stack UI: SPA con build (React/Svelte) vs HTML modular sin build (htmx/Alpine); Streamlit queda para prototipo. (3) Despliegue: laptop del analista vs servidor/VM corporativa. (4) UI/UX por rol: colas de leads priorizadas, estado claro, confirmacion segura de escrituras, historial/auditoria, cola de excepciones, explicacion del modelo por lead. (5) Analisis de llamadas: sigue local-only CPU (faster-whisper/Vosk); evaluar si existe LLM aprobable, sino alcance = transcripcion. (6) Modelo por pais vs LATAM. (7) Fases: F1 corregir y reentrenar MX; F2 API Salesforce + Wolkvox integrados; F3 llamadas; F4 app unificada."
+        },
+        {
+          "id": "mx-reentrenamiento-automati",
+          "name": "Reentrenamiento automatizado",
+          "status": "pending",
+          "progress": 0,
+          "start": "2026-12-01",
+          "end": "2026-12-18",
+          "deps": [
+            "mx-train"
+          ],
+          "estHours": 24,
+          "notes": "PIPELINE AUTOMATIZADO: ingesta exporte -> gates de calidad de datos (schema, nulos, encoding, telefonos, Hot rate por segmento vs rango esperado) -> chequeo de leakage (campos post-outcome, formularios >=98% Hot) -> limpieza v3 -> target/exclusion policy versionadas -> split temporal -> entrenamiento baseline + candidatos con busqueda de hiperparametros y calibracion -> gates de validacion (AUC, PR-AUC, calibracion, por segmento) -> champion vs challenger -> aprobacion humana -> artefactos versionados (modelo, preprocessing, umbral, metricas, hash de datos) -> despliegue con rollback. Programar mensual o al llegar exporte nuevo. Registrar cada corrida en history.db o MLflow local."
+        },
+        {
+          "id": "mx-monitoreo-drift-y-metric",
+          "name": "Monitoreo drift y metricas",
+          "status": "pending",
+          "progress": 0,
+          "start": "2026-12-07",
+          "end": "2026-12-18",
+          "deps": [
+            "mx-eval"
+          ],
+          "estHours": 12,
+          "notes": "MONITOREAR EN PRODUCCION: drift de inputs por mes, origen, formulario, plataforma, vehiculo, concesionario y proceso de cualificacion (PSI/KS); distribucion de probabilidades y tasa de Hot predicho vs real cuando llega la cualificacion/venta; calibracion mensual; alertas si Hot rate de un segmento sale del rango; dashboard en la app con historial por sesion. Disparar reentrenamiento cuando el drift supera umbral."
         }
       ]
     }

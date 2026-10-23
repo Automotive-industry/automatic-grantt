@@ -30,6 +30,40 @@
           ]
         },
         {
+          "id": "wo-evaluar-ecc-y-ruflo-para",
+          "name": "Evaluar ECC y Ruflo para harness experto",
+          "status": "done",
+          "progress": 100,
+          "start": "2026-10-09",
+          "end": "2026-10-09",
+          "estHours": 1,
+          "hours": 0.12,
+          "notes": "Evaluación comparativa de arquitecturas de agentes para el harness del proyecto.",
+          "updates": [
+            {
+              "date": "2026-10-09",
+              "text": "Evaluación completada de ECC y Ruflo para definir patrones de agentes expertos."
+            }
+          ]
+        },
+        {
+          "id": "wo-disenar-integracion-sele",
+          "name": "Diseñar integración selectiva ECC",
+          "status": "done",
+          "progress": 100,
+          "start": "2026-10-10",
+          "end": "2026-10-10",
+          "estHours": 1,
+          "hours": 0.11,
+          "notes": "Diseño e integración selectiva de workflows expertos ECC en el repositorio.",
+          "updates": [
+            {
+              "date": "2026-10-10",
+              "text": "Integración selectiva de agentes expertos ECC diseñada y documentada en OpenSpec."
+            }
+          ]
+        },
+        {
           "id": "wv-monitor",
           "name": "Monitor de Bandeja (toma de leads automática)",
           "status": "done",
@@ -292,40 +326,6 @@
           "estHours": 40,
           "deps": [
             "wv-api"
-          ]
-        },
-        {
-          "id": "wo-evaluar-ecc-y-ruflo-para",
-          "name": "Evaluar ECC y Ruflo para harness experto",
-          "status": "done",
-          "progress": 100,
-          "start": "2026-10-09",
-          "end": "2026-10-09",
-          "estHours": 1,
-          "hours": 0.12,
-          "notes": "Evaluación comparativa de arquitecturas de agentes para el harness del proyecto.",
-          "updates": [
-            {
-              "date": "2026-10-09",
-              "text": "Evaluación completada de ECC y Ruflo para definir patrones de agentes expertos."
-            }
-          ]
-        },
-        {
-          "id": "wo-disenar-integracion-sele",
-          "name": "Diseñar integración selectiva ECC",
-          "status": "done",
-          "progress": 100,
-          "start": "2026-10-10",
-          "end": "2026-10-10",
-          "estHours": 1,
-          "hours": 0.11,
-          "notes": "Diseño e integración selectiva de workflows expertos ECC en el repositorio.",
-          "updates": [
-            {
-              "date": "2026-10-10",
-              "text": "Integración selectiva de agentes expertos ECC diseñada y documentada en OpenSpec."
-            }
           ]
         },
         {

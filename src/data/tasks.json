@@ -1,7 +1,7 @@
 {
   "meta": {
     "title": "Tablero de proyectos — Data & Automatización",
-    "lastUpdated": "2026-10-23"
+    "lastUpdated": "2026-11-03"
   },
   "projects": [
     {
@@ -70,7 +70,7 @@
           "progress": 100,
           "start": "2026-09-21",
           "end": "2026-10-16",
-          "hours": 17.25,
+          "hours": 37.25,
           "estHours": 20,
           "deps": [
             "wv-doc-ar"
@@ -188,6 +188,50 @@
             {
               "date": "2026-10-22",
               "text": "Prefs de UI movidas al servidor (/api/ui-prefs): vista de columnas sobrevive cambio de navegador. Permiso de notificaciones pedido en primer gesto + boton 'Probar aviso'. Toast backend ahora avisa leads nuevos, no solo tomados."
+            },
+            {
+              "date": "2026-10-23",
+              "text": "Franjas de equipo por bandeja: modelo {start,end,bandejas}, validación de solape por bandeja, gate sin_cobertura en ciclo, _any_turno_activo bandeja-aware, UI con checkboxes+chips, columna Contactar-por con iconos WA/llamada. 482 tests OK, franjas viejas migradas por API, dist sync + reload verificado en vivo"
+            },
+            {
+              "date": "2026-10-23",
+              "text": "Franja propia tambien por bandeja: checkboxes en Horario del monitor, [] = todas (compat), solape por bandeja en validate_schedule, propio_activo filtra por bandeja del ciclo. 492 tests OK, franjas propias restauradas por API tras borrado manual del usuario"
+            },
+            {
+              "date": "2026-10-23",
+              "text": "Disponibilidad de bandejas: las 3 opciones visibles en franjas pero solo tildables las disponibles (habilitada+link); backend 400 si franja apunta a bandeja no disponible; PUT config no revalida franjas viejas. 493 tests OK, verificado en vivo AR:on CO:off MX:on"
+            },
+            {
+              "date": "2026-10-24",
+              "text": "Verificadores: franja exige >=1 bandeja en UI+backend (schedAdd valida antes de agregar; PUTs 400); checkbox habilitar bandeja bloqueado sin link + saveBandejas corta. 207 tests OK, verificado en vivo 400/400"
+            },
+            {
+              "date": "2026-10-24",
+              "text": "Advertencias en rojo: msg-error/msg-ok en los 3 paneles, chips sin bandeja marcados (sched-chip-bad), error visible en vivo al renderizar (no solo al guardar). Verificado en vivo rgb(183,28,28)"
+            },
+            {
+              "date": "2026-10-24",
+              "text": "+franja equipo bloquea el alta sin bandeja (valida antes de entrar al borrador); alert() en acciones explicitas, auto-guardados solo mensaje rojo. Verificado en vivo: chips 2->2, alert dispara"
+            },
+            {
+              "date": "2026-10-24",
+              "text": "Toast Windows enriquecido: ToastText04 3 lineas, emoji estado (verde/rojo no se puede colorear texto), asignado_a + preferencia_contacto (WA/llamada), dedup por cambio de status, pipe UTF-8. 30 tests OK"
+            },
+            {
+              "date": "2026-10-24",
+              "text": "Toast: scenario=urgent atraviesa No molestar (verificado); detectados nombrados por linea con bandeja+contacto. Commit 56872b0"
+            },
+            {
+              "date": "2026-10-26",
+              "text": "Fix robo de foco: switch_to.window solo cuando difiere del handle del monitor + cierre de pestaña por CDP Target.closeTarget (sin bringToFront). 30 tests OK, dist sync, servidor recargado, zip 26MB armado"
+            },
+            {
+              "date": "2026-10-31",
+              "text": "Fix reasignacion por hora de ingreso: el ciclo descartaba el equipo con franja propia vigente al tomar; destino por lead segun Fecha de creacion + fin de franja inclusivo. 552 tests OK"
+            },
+            {
+              "date": "2026-11-02",
+              "text": "Tarjeta de estado por SSE: paused_reason/last_cycle_at se emiten al pausar y al cerrar ciclo (ya no queda congelada en 'En espera'). Commit cd7a564, 573 tests OK"
             }
           ]
         },
@@ -263,9 +307,37 @@
             {
               "date": "2026-10-17",
               "text": "Las franjas del equipo ahora TAMBIEN gatean la toma: un turno de equipo activo dispara el ciclo automatico y reasigna el lead a esa persona (antes solo se evaluaba post-pickup como fallback). La franja propia del monitor tiene prioridad: dentro de ella no se delega."
+            },
+            {
+              "date": "2026-10-24",
+              "text": "Distribución por lote de leads no hábiles: loader xlsx/csv + runner reassign_owner + UI con preview editable. 512 tests OK. Pendiente prueba real 1 lead."
+            },
+            {
+              "date": "2026-10-27",
+              "text": "Fix detección invisible del monitor: evento bandeja_scan (filas/matches/propietarios vistos) + match de owner case-insensitive + conteo de omitidos por estado. 523 tests OK. ZIP v1.4.2 empaquetado limpio (sin runtime data)."
+            },
+            {
+              "date": "2026-10-30",
+              "text": "Fix reasignación por hora de ingreso del lead (TDD): encargada por Fecha de creación, no por hora de toma"
+            },
+            {
+              "date": "2026-11-02",
+              "text": "Modo prueba distribuir leads implementado (sin commit)"
+            },
+            {
+              "date": "2026-11-02",
+              "text": "SKIP_OWNERS +MX/CO cold/export (TDD) + celda resaltada; modo prueba distribucion verificado"
+            },
+            {
+              "date": "2026-11-02",
+              "text": "Distribuir leads: modo prueba (verifica nombre en modal y cancela siempre) + colas frio/export MX/CO excluidas. Commit cd7a564, 573 tests OK"
+            },
+            {
+              "date": "2026-11-03",
+              "text": "Lookup owner: foco + diagnostico de desplegable (TDD); fallo de Roger era transitorio, mecanismo verificado en vivo"
             }
           ],
-          "hours": 6.01
+          "hours": 27.01
         },
         {
           "id": "wv-duplicados",
@@ -665,6 +737,113 @@
               "text": "Monitor de Bandeja (toma de leads automática): Prefs de UI movidas al servidor (/api/ui-prefs): vista de columnas sobrevive cambio de navegador. Permiso de notificaciones pedido en primer gesto + boton 'Probar aviso'. Toast backend ahora avisa leads nuevos, no solo tomados."
             }
           ]
+        },
+        {
+          "id": "wo-rel-v1-4-2-monitor-diagnosti",
+          "name": "v1.4.2 — Monitor: diagnóstico visible de bandejas",
+          "status": "done",
+          "progress": 100,
+          "start": "2026-10-27",
+          "end": "2026-10-27",
+          "milestone": true,
+          "release": true,
+          "updates": [
+            {
+              "date": "2026-10-22",
+              "text": "Monitor de Bandeja (toma de leads automática): Prefs de UI movidas al servidor (/api/ui-prefs): vista de columnas sobrevive cambio de navegador. Permiso de notificaciones pedido en primer gesto + boton 'Probar aviso'. Toast backend ahora avisa leads nuevos, no solo tomados."
+            },
+            {
+              "date": "2026-10-23",
+              "text": "Monitor de Bandeja (toma de leads automática): Franjas de equipo por bandeja: modelo {start,end,bandejas}, validación de solape por bandeja, gate sin_cobertura en ciclo, _any_turno_activo bandeja-aware, UI con checkboxes+chips, columna Contactar-por con iconos WA/llamada. 482 tests OK, franjas viejas migradas por API, dist sync + reload verificado en vivo"
+            },
+            {
+              "date": "2026-10-23",
+              "text": "Monitor de Bandeja (toma de leads automática): Franja propia tambien por bandeja: checkboxes en Horario del monitor, [] = todas (compat), solape por bandeja en validate_schedule, propio_activo filtra por bandeja del ciclo. 492 tests OK, franjas propias restauradas por API tras borrado manual del usuario"
+            },
+            {
+              "date": "2026-10-23",
+              "text": "Monitor de Bandeja (toma de leads automática): Disponibilidad de bandejas: las 3 opciones visibles en franjas pero solo tildables las disponibles (habilitada+link); backend 400 si franja apunta a bandeja no disponible; PUT config no revalida franjas viejas. 493 tests OK, verificado en vivo AR:on CO:off MX:on"
+            },
+            {
+              "date": "2026-10-24",
+              "text": "Monitor de Bandeja (toma de leads automática): Verificadores: franja exige >=1 bandeja en UI+backend (schedAdd valida antes de agregar; PUTs 400); checkbox habilitar bandeja bloqueado sin link + saveBandejas corta. 207 tests OK, verificado en vivo 400/400"
+            },
+            {
+              "date": "2026-10-24",
+              "text": "Monitor de Bandeja (toma de leads automática): Advertencias en rojo: msg-error/msg-ok en los 3 paneles, chips sin bandeja marcados (sched-chip-bad), error visible en vivo al renderizar (no solo al guardar). Verificado en vivo rgb(183,28,28)"
+            },
+            {
+              "date": "2026-10-24",
+              "text": "Monitor de Bandeja (toma de leads automática): +franja equipo bloquea el alta sin bandeja (valida antes de entrar al borrador); alert() en acciones explicitas, auto-guardados solo mensaje rojo. Verificado en vivo: chips 2->2, alert dispara"
+            },
+            {
+              "date": "2026-10-24",
+              "text": "Monitor de Bandeja (toma de leads automática): Toast Windows enriquecido: ToastText04 3 lineas, emoji estado (verde/rojo no se puede colorear texto), asignado_a + preferencia_contacto (WA/llamada), dedup por cambio de status, pipe UTF-8. 30 tests OK"
+            },
+            {
+              "date": "2026-10-24",
+              "text": "Monitor de Bandeja (toma de leads automática): Toast: scenario=urgent atraviesa No molestar (verificado); detectados nombrados por linea con bandeja+contacto. Commit 56872b0"
+            },
+            {
+              "date": "2026-10-24",
+              "text": "Asignación automática de leads: Distribución por lote de leads no hábiles: loader xlsx/csv + runner reassign_owner + UI con preview editable. 512 tests OK. Pendiente prueba real 1 lead."
+            },
+            {
+              "date": "2026-10-26",
+              "text": "Monitor de Bandeja (toma de leads automática): Fix robo de foco: switch_to.window solo cuando difiere del handle del monitor + cierre de pestaña por CDP Target.closeTarget (sin bringToFront). 30 tests OK, dist sync, servidor recargado, zip 26MB armado"
+            }
+          ]
+        },
+        {
+          "id": "wo-rel-v1-4-2-monitor-estado-co",
+          "name": "v1.4.2 — Monitor: estado con semáforo, reasignación robusta, columna Bandeja, aviso único",
+          "status": "done",
+          "progress": 100,
+          "start": "2026-10-29",
+          "end": "2026-10-29",
+          "milestone": true,
+          "release": true,
+          "updates": [
+            {
+              "date": "2026-10-27",
+              "text": "Asignación automática de leads: Fix detección invisible del monitor: evento bandeja_scan (filas/matches/propietarios vistos) + match de owner case-insensitive + conteo de omitidos por estado. 523 tests OK. ZIP v1.4.2 empaquetado limpio (sin runtime data)."
+            }
+          ]
+        },
+        {
+          "id": "wo-via-tdd-en-harness",
+          "name": "Vía TDD en harness",
+          "status": "done",
+          "progress": 100,
+          "start": "2026-10-30",
+          "end": "2026-10-30",
+          "updates": [
+            {
+              "date": "2026-10-29",
+              "text": "Vía TDD implementada: harness tdd-red/tdd-green, skill tdd, Fase 0.5 en AGENTS.md, reglas IDE, CHANGELOG + OpenSpec change agregar-via-tdd. 539 tests OK, ruff OK."
+            }
+          ],
+          "hours": 0
+        },
+        {
+          "id": "wo-rel-v1-4-3-paquete-reproduci",
+          "name": "v1.4.3 — Paquete reproducible + verificación de PC",
+          "status": "done",
+          "progress": 100,
+          "start": "2026-10-30",
+          "end": "2026-10-30",
+          "milestone": true,
+          "release": true,
+          "updates": [
+            {
+              "date": "2026-10-29",
+              "text": "Vía TDD en harness: Vía TDD implementada: harness tdd-red/tdd-green, skill tdd, Fase 0.5 en AGENTS.md, reglas IDE, CHANGELOG + OpenSpec change agregar-via-tdd. 539 tests OK, ruff OK."
+            },
+            {
+              "date": "2026-10-30",
+              "text": "Asignación automática de leads: Fix reasignación por hora de ingreso del lead (TDD): encargada por Fecha de creación, no por hora de toma"
+            }
+          ]
         }
       ]
     },
@@ -805,7 +984,7 @@
               "text": "Plan de limpieza, dudas, investigaciones y proximos pasos documentados en el tablero (8 tareas nuevas en mx-model)"
             }
           ],
-          "hours": 4,
+          "hours": 4.67,
           "blocker": "Esperando respuestas Q1-Q12 del encargado MX y re-exporte Salesforce sin Excel (teléfonos corruptos)",
           "notes": "HALLAZGOS BD 2026 (FULL BD MX 2026 .csv, 185.350 leads x 30 cols, 01-01 a 03-10-2026, 103 concesionarios): (1) Target Cualificacion: 69% Contacto interesado, 10% Rechazo argumentado, 8% Rechazo no argumentado, 13% null (Nuevo/En curso = sin cualificar, NO son Cold). (2) Plataforma MX_LEAD_CHATBOT_QUALIF = 117.221 leads con 99,9% Hot: cualificacion automatica, no humana. Solo MX_LEAD_QUALIF (57.862 leads, 38,9% Hot) tiene cualificacion humana. (3) Formularios MX_Renault_2026_* (Kwid, Koleos, Arkana, Oroch, Duster, Kardian, Boreal) y CHATBOT-WHATSAPP = 99-100% Hot (pre-clasificados). Facebook 97,4% Hot, WhatsApp 98,9%, ONE 66,4%. (4) Drift fuerte: Hot rate mensual sube de 46% (feb) a 95% (oct); en MX_LEAD_QUALIF cae de 42% a 18% en sep. Volumen mensual x3 desde junio (26k-37k/mes). (5) 93% de telefonos corruptos en notacion cientifica (5,25523E+11): exporte paso por Excel. Bloquea dedup, deteccion de fake numbers y cruce con R-Solve. (6) Encoding mixto (byte 0xA0, no es UTF-8 limpio), delimitador punto y coma. (7) Sub-Cualificacion null en el 100% de los Hot. (8) Fecha reasignacion presente en casi todos los registros Hot y Cold: metadata de proceso, riesgo de leakage. (9) Lead ID unico sin nulos. Tipo de interes 100% Vehiculo Nuevo. (10) nombre_formulario y campana siguen siendo 1:1. CONCLUSION: no reentrenar sobre la BD completa; target humano solo en MX_LEAD_QUALIF; target definitivo = ventas reales R-Solve. Detalle: docs/CASO_BD_MX_2026_LIMPIEZA.md"
         },

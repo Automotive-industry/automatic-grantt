@@ -85,6 +85,83 @@
       "start": "2026-10-22T14:14:08.219Z",
       "end": "2026-10-22T14:44:35.061Z",
       "hours": 0.51
+    },
+    {
+      "taskId": "wv-asignacion",
+      "start": "2026-10-24T14:00:00.000Z",
+      "end": "2026-10-24T15:34:48.000Z",
+      "hours": 1.58
+    },
+    {
+      "taskId": "wv-asignacion",
+      "start": "2026-10-26T14:00:00.000Z",
+      "end": "2026-10-26T15:34:48.000Z",
+      "hours": 1.58
+    },
+    {
+      "taskId": "wv-asignacion",
+      "start": "2026-10-27T14:00:00.000Z",
+      "end": "2026-10-27T15:34:48.000Z",
+      "hours": 1.58
+    },
+    {
+      "taskId": "wv-asignacion",
+      "start": "2026-10-29T14:00:00.000Z",
+      "end": "2026-10-29T15:34:48.000Z",
+      "hours": 1.58
+    },
+    {
+      "taskId": "wv-asignacion",
+      "start": "2026-10-30T14:00:00.000Z",
+      "end": "2026-10-30T15:34:48.000Z",
+      "hours": 1.58
+    },
+    {
+      "taskId": "wv-asignacion",
+      "start": "2026-11-02T14:00:00.000Z",
+      "end": "2026-11-02T15:36:00.000Z",
+      "hours": 1.6
+    },
+    {
+      "taskId": "wv-asignacion",
+      "start": "2026-10-27T20:22:33.319Z",
+      "end": "2026-10-27T20:22:33.323Z",
+      "hours": 4.5,
+      "manual": true
+    },
+    {
+      "taskId": "wo-via-tdd-en-harness",
+      "start": "2026-10-29T23:44:04.854Z",
+      "end": "2026-10-29T23:44:18.595Z",
+      "hours": 0
+    },
+    {
+      "taskId": "wv-asignacion",
+      "start": "2026-10-30T18:17:13.449Z",
+      "end": "2026-10-30T18:17:13.451Z",
+      "hours": 0.5,
+      "manual": true
+    },
+    {
+      "taskId": "wv-monitor",
+      "start": "2026-11-03T04:51:22.377Z",
+      "end": "2026-11-03T04:51:22.379Z",
+      "hours": 20,
+      "manual": true
+    },
+    {
+      "taskId": "wv-asignacion",
+      "start": "2026-11-03T04:51:22.712Z",
+      "end": "2026-11-03T04:51:22.715Z",
+      "hours": 6.5,
+      "manual": true
+    },
+    {
+      "taskId": "mx-auditoria-y-limpieza-bd-",
+      "start": "2026-11-03T04:51:23.077Z",
+      "end": "2026-11-03T04:51:23.081Z",
+      "hours": 0.67,
+      "manual": true
     }
   ]
 }
